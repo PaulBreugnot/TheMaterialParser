@@ -26,3 +26,7 @@
   opacity: 0;
   z-index: 1;
 }
+
+.alert {
+  margin: 10px 10px 10px;
+}

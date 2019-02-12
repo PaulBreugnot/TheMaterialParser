@@ -4,12 +4,12 @@
 
 root_url = "http://localhost:3000/"
 
-appData = {
-  alert: null,
-  datasheets: [],
-  selectedCategory: null,
+appData =
+  alert: null
+  datasheets: []
+  selectedCategory: null
   fileOk: false
-}
+  datasheetsUrl: ""
 
 window.onload = () ->
 
@@ -17,17 +17,18 @@ window.onload = () ->
     el: '#main_view',
     data: appData,
     methods: {
-      checkUpload : () ->
+      checkUpload : (e) ->
         console.log("Hello Check")
+        valid = false
         if !this.selectedCategory
           this.alert = "Please select a category before uploading the datasheet."
-          false
         else if !this.fileOk
           this.alert = "Please select a file to upload."
-          false
         else
           this.alert = null
-          true
+          valid = true
+        if !valid then e.preventDefault()
+        valid
 
       validateFile: () ->
           this.fileOk = true
@@ -37,18 +38,27 @@ window.onload = () ->
         # Clear Alerts
         this.alert = null
         # Returns a JSON promise
-        url = root_url + "api/buildings";
-        options = {method: "GET"};
-        # fetch(url, options)
-        # .catch((err) ->
-        #   console.log("Connection error : " + err)
-        #   throw Error("Connection error")
-        # )
-        # .then((response) ->
-        #   if response.ok
-        #     response.json()
-        #   else
-        #     []
-        #   )
+        this.datasheetsUrl = "datasheet_categories/" + this.selectedCategory + "/datasheets"
+        this.datasheets = []
+        options =
+          method: "GET"
+          headers:
+            "Content-Type": "application/json"
+
+        console.log(this.datasheetsUrl)
+        fetch(this.datasheetsUrl, options)
+        .catch((err) ->
+          console.log("Connection error : " + err)
+          throw Error("Connection error")
+          )
+        .then((response) ->
+          if response.ok
+            response.json()
+          else
+            []
+          )
+        .then((json) ->
+            appData.datasheets.push(datasheet) for datasheet in json
+          )
     }
   })

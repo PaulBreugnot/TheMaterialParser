@@ -1,14 +1,14 @@
 <%= form_for @new_datasheet_category, html: { multipart: true, class: "form-inline" } do |f| %>
   <div class="form-group column">
-  <select v-model="selectedCategory" v-on:change="fetchDatasheets" class="form-control" id="categories_menu">
-    <% @datasheet_categories.each do |datasheet_category| %>
-      <option v-bind:value="<%= datasheet_category.id %>"> <%= datasheet_category.name %> </option>
-    <% end %>
-  </select>
+    <%= select_tag(:city_id, options_for_select(
+      @datasheet_categories.collect { |d| [d.name, d.id]}, @datasheet_categories[0].id
+    ), {"v-model":"selectedCategory", "v-on:change": "fetchDatasheets", class:"form-control", id:"categories_menu"}) %>
   </div>
+
   <div class="form-group column">
     <%= f.text_field :name, placeholder: "New Category", class: "form-control", id:"category_name" %>
   </div>
+
   <div class="form-group column">
     <%= f.submit "Add Category", class: "btn btn-info" %>
   </div>
