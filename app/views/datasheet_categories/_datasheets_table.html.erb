@@ -1,0 +1,19 @@
+<table class = "table table-hover">
+   <thead>
+      <tr>
+         <th> </th>
+         <th>Name</th>
+         <th>PDF</th>
+         <th> </th>
+      </tr>
+   </thead>
+
+   <tbody>
+         <tr v-for="datasheet in datasheets">
+            <td><i class="far fa-file-alt"></i></td>
+            <td> {{datasheet.name}} </td>
+            <td><a v-bind:href="datasheet.pdfDatasheet_url" > View PDF </a></td>
+         </tr>
+   </tbody>
+
+</table>

@@ -1,0 +1,17 @@
+<!-- Alerts from server side -->
+<% if !flash[:notice].blank? %>
+   <div class = "alert alert-success">
+      <%= flash[:notice] %>
+   </div>
+<% end %>
+
+<% if !flash[:alert].blank? %>
+   <div class = "alert alert-danger">
+      <%= flash[:alert] %>
+   </div>
+<% end %>
+
+<!-- Alerts from client side (Vue.js) -->
+<div v-if="alert" class = "alert alert-danger">
+    {{ alert }}
+</div>
