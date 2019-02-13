@@ -16,3 +16,19 @@
   font-size: 1.2em;
   margin: 0 5px;
 }
+
+.titleButtonsBlock {
+  width: 100%;
+  display: inline-flex;
+  margin: 10px 20px
+}
+
+.titleButtonsBlock h2 {
+  width: 30%;
+  margin:auto;
+}
+
+.titleButtonsBlock button {
+  width: 20%;
+  margin:auto;
+}

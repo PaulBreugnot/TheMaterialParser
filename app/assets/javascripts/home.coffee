@@ -83,6 +83,43 @@ $(document).on "turbolinks:load", ->
       selectAll: () ->
         datasheetItem.selected = this.allSelected for datasheetItem in this.datasheetItems
 
+      deleteSelection: () ->
+
+        datasheet_ids = []
+        createSelectionOptions =
+          method: "POST"
+          hearders:
+            "Content-Type": "application/json"
+            "Accept": "application/json"
+
+        datasheet_ids.push(datasheetItem.datasheet.id) \
+          for datasheetItem in this.datasheetItems \
+            when datasheetItem.selected
+
+        createSelectionOptions.body = JSON.stringify(
+            type: "delete"
+            datasheet_ids: datasheet_ids
+            )
+
+        console.log(createSelectionOptions.body)
+        console.log("Create selection : " + datasheet_ids)
+        if datasheet_ids.length > 0
+          fetch("/datasheet_selections", createSelectionOptions)
+          .catch((err) ->
+            console.log("Connection error : " + err)
+            throw Error("Connection error")
+            )
+          # Return a JSON promise
+          .then((response) ->
+            if response.ok
+              response.json()
+            else
+              []
+            )
+          .then((json) ->
+            console.log(json)
+            )
+
       # Used to print dates in the table
       formatDate: (dateString) ->
         date = new Date(dateString)

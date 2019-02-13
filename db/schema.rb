@@ -10,12 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_11_181511) do
+ActiveRecord::Schema.define(version: 2019_02_13_162151) do
 
   create_table "datasheet_categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "datasheet_selections", force: :cascade do |t|
+    t.string "selection_type"
+    t.boolean "saved"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "datasheet_selections_datasheets", id: false, force: :cascade do |t|
+    t.integer "datasheet_id", null: false
+    t.integer "datasheet_selection_id", null: false
+    t.index ["datasheet_selection_id", "datasheet_id"], name: "selection_index", unique: true
   end
 
   create_table "datasheets", force: :cascade do |t|
