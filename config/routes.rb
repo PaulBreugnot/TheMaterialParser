@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'home/index'
   get 'datasheet_categories/index'
   get 'datasheet_categories/create'
 
@@ -16,5 +17,5 @@ Rails.application.routes.draw do
   get 'about/index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  root 'datasheet_categories#index'
+  root 'home#index'
 end

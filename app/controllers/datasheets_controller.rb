@@ -9,6 +9,7 @@ class DatasheetsController < ApplicationController
     end
 
     respond_to do |format|
+      format.html { render "index" }
       format.json { render json: @datasheets }
     end
   end
@@ -20,9 +21,9 @@ class DatasheetsController < ApplicationController
     respond_to do |format|
       format.html {
         if @datasheet
-          redirect_to datasheet_categories_path, notice: "Datasheet #{@datasheet.name} has been uploaded to #{@datasheet_category.name}."
+          redirect_to home_index_path, notice: "Datasheet #{@datasheet.name} has been uploaded to #{@datasheet_category.name}."
         else
-          redirect_to datasheet_categories_path, alert: "An error occured."
+          redirect_to home_index_path, alert: "An error occured."
         end
         }
       format.json { render json: @datasheet }

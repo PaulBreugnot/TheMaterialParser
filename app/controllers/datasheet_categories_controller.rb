@@ -1,15 +1,8 @@
 class DatasheetCategoriesController < ApplicationController
   def index
     @datasheet_categories = DatasheetCategory.all
-    # @selected_datasheet_category = @datasheet_categories[0]
     @new_datasheet_category = DatasheetCategory.new
-
-    @new_datasheet = Datasheet.new
   end
-
-
-  # def datasheets
-  # end
 
   def create
     @datasheetCategory = DatasheetCategory.new(datasheet_categories_params)
