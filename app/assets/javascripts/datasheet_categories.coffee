@@ -5,12 +5,12 @@
 root_url = "http://localhost:3000/"
 
 appData =
-  alert: null
-  datasheetItems: []
-  allSelected: null
-  selectedCategory: null
-  fileOk: false
-  datasheetsUrl: ""
+  alert: null # Alert message in case of trouble from client side
+  datasheetItems: [] # { datasheet: fetched_datasheet, selected: is_the_datasheet_selected?}
+  allSelected: null # Global selection checkbox status
+  selectedCategory: null # Pointer to the selected category ("select" box)
+  fileOk: false # true if a file is selected
+  datasheetsUrl: "" # URL generated from the selectedCategory to fetch corresponding datasheets
 
 window.onload = () ->
 
@@ -18,6 +18,7 @@ window.onload = () ->
     el: '#main_view',
     data: appData,
     methods: {
+      # Called on submit action
       checkUpload : (e) ->
         console.log("Hello Check")
         valid = false
@@ -28,9 +29,11 @@ window.onload = () ->
         else
           this.alert = null
           valid = true
+        # Prevent from upload
         if !valid then e.preventDefault()
         valid
 
+      # Called on file selected
       validateFile: () ->
           this.fileOk = true
 
@@ -38,7 +41,6 @@ window.onload = () ->
       fetchDatasheets: () ->
         # Clear Alerts
         this.alert = null
-        # Returns a JSON promise
         this.datasheetsUrl = "datasheet_categories/" + this.selectedCategory + "/datasheets"
         this.datasheetItems = []
         options =
@@ -46,18 +48,20 @@ window.onload = () ->
           headers:
             "Content-Type": "application/json"
 
-        console.log(this.datasheetsUrl)
+        console.log("Fetching datasheets from : " + this.datasheetsUrl)
         fetch(this.datasheetsUrl, options)
         .catch((err) ->
           console.log("Connection error : " + err)
           throw Error("Connection error")
           )
+        # Returns a JSON promise
         .then((response) ->
           if response.ok
             response.json()
           else
             []
           )
+        # Process the JSON response
         .then((json) ->
             appData.datasheetItems.push(
                 datasheet: datasheet
@@ -65,10 +69,11 @@ window.onload = () ->
                 ) for datasheet in json
           )
 
+      # Called on global checkbox action
       selectAll: () ->
-        console.log(this.allSelected)
         datasheetItem.selected = this.allSelected for datasheetItem in this.datasheetItems
 
+      # Used to print dates in the table
       formatDate: (dateString) ->
         date = new Date(dateString)
         date.getMonth() + "-" + date.getDate() + "-" + date.getFullYear() + \
