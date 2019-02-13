@@ -5,15 +5,18 @@
          <th>Name</th>
          <th>PDF</th>
          <th>Added</th>
+         <th><input class="form-check-input position-static" type="checkbox" v-on:change="selectAll" v-model="allSelected" aria-label="Select All"></th>
       </tr>
    </thead>
 
    <tbody>
-         <tr v-if="datasheets.length > 0" v-for="datasheet in datasheets">
+     <!-- datasheet items contain the original datasheet as given by the server, and a selected parameter. -->
+         <tr v-if="datasheetItems.length > 0" v-for="datasheetItem in datasheetItems">
             <td><i class="far fa-file-alt"></i></td>
-            <td> {{datasheet.name}} </td>
-            <td><a v-bind:href="datasheet.pdfDatasheet.url" > View PDF </a></td>
-            <td> {{datasheet.updated_at}} </td>
+            <td> {{datasheetItem.datasheet.name}} </td>
+            <td><a v-bind:href="datasheetItem.datasheet.pdfDatasheet.url" > View PDF </a></td>
+            <td> {{ formatDate(datasheetItem.datasheet.updated_at) }} </td>
+            <td> <input class="form-check-input position-static" type="checkbox" v-model="datasheetItem.selected" aria-label="Select File"> </td>
          </tr>
    </tbody>
 

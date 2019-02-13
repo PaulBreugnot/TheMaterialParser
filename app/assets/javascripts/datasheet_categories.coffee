@@ -6,7 +6,8 @@ root_url = "http://localhost:3000/"
 
 appData =
   alert: null
-  datasheets: []
+  datasheetItems: []
+  allSelected: null
   selectedCategory: null
   fileOk: false
   datasheetsUrl: ""
@@ -39,7 +40,7 @@ window.onload = () ->
         this.alert = null
         # Returns a JSON promise
         this.datasheetsUrl = "datasheet_categories/" + this.selectedCategory + "/datasheets"
-        this.datasheets = []
+        this.datasheetItems = []
         options =
           method: "GET"
           headers:
@@ -58,7 +59,19 @@ window.onload = () ->
             []
           )
         .then((json) ->
-            appData.datasheets.push(datasheet) for datasheet in json
+            appData.datasheetItems.push(
+                datasheet: datasheet
+                selected: false
+                ) for datasheet in json
           )
+
+      selectAll: () ->
+        console.log(this.allSelected)
+        datasheetItem.selected = this.allSelected for datasheetItem in this.datasheetItems
+
+      formatDate: (dateString) ->
+        date = new Date(dateString)
+        date.getMonth() + "-" + date.getDate() + "-" + date.getFullYear() + \
+          " " + date.getHours() + ":" + date.getMinutes()
     }
   })
