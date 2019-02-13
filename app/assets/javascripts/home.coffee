@@ -14,7 +14,7 @@ $(document).on "turbolinks:load", ->
     datasheetItems: [] # { datasheet: fetched_datasheet, selected: is_the_datasheet_selected?}
     allSelected: null # Global selection checkbox status
     selectedCategory: Cookies.get('selectedCategory') # Id of the selected category ("select" box)
-    fileName: ""
+    fileName: "No file selected."
     datasheetsUrl: "" # URL generated from the selectedCategory to fetch corresponding datasheets
 
   console.log("Load Window " + Date.now())
@@ -28,7 +28,7 @@ $(document).on "turbolinks:load", ->
         valid = false
         if !this.selectedCategory
           this.alert = "Please select a category before uploading the datasheet."
-        else if this.fileName.length == 0
+        else if this.fileName == "No file selected."
           this.alert = "Please select a file to upload."
         else
           this.alert = null
@@ -39,8 +39,11 @@ $(document).on "turbolinks:load", ->
 
       # Called on file selected
       selectFiles: (e) ->
-        console.log("Selected file : " + e.target.files[0].name)
-        this.fileName = e.target.files[0].name
+        if e.target.files.length == 1
+          this.fileName = e.target.files[0].name
+        else
+          this.fileName = e.target.files.length + " files selected."
+        console.log("Selected file : " + this.filename)
 
       # Fetch group datasheets
       fetchDatasheets: () ->

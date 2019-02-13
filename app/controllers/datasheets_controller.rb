@@ -16,8 +16,11 @@ class DatasheetsController < ApplicationController
 
   def create
     @datasheet_category = DatasheetCategory.find(params[:datasheet][:datasheet_category_id])
-    @datasheet = @datasheet_category.datasheets.create(datasheet_params)
-
+    params[:datasheet][:pdfDatasheet].each do |pdfFile|
+      @datasheet = @datasheet_category.datasheets.create({name: pdfFile.original_filename, pdfDatasheet: pdfFile})
+    end
+    # @datasheet = @datasheet_category.datasheets.create(datasheet_params)
+    #
     respond_to do |format|
       format.html {
         if @datasheet
