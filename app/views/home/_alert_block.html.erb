@@ -12,6 +12,9 @@
 <% end %>
 
 <!-- Alerts from client side (Vue.js) -->
+<div v-if="notice" class = "alert alert-success">
+    {{ notice }}
+</div>
 <div v-if="alert" class = "alert alert-danger">
     {{ alert }}
 </div>

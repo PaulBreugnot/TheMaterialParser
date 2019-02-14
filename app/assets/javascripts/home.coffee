@@ -5,11 +5,9 @@
 $(document).on "turbolinks:load", ->
   return unless $("#home_view").length > 0
 
-  console.log("Hello There " + Date.now())
-
-  root_url = "http://localhost:3000/"
-
+  # Vue data definition
   appData =
+    notice: null # Notice message on success from client side
     alert: null # Alert message in case of trouble from client side
     datasheetItems: [] # { datasheet: fetched_datasheet, selected: is_the_datasheet_selected?}
     allSelected: null # Global selection checkbox status
@@ -17,13 +15,13 @@ $(document).on "turbolinks:load", ->
     fileName: "No file selected."
     datasheetsUrl: "" # URL generated from the selectedCategory to fetch corresponding datasheets
 
-  console.log("Load Window " + Date.now())
+  # Instanciating Vue
   datasheetCategoriesApp = new Vue({
     el: '#home_view'
     data: appData
 
     methods:
-      # Called on submit action
+      # Called on submit datasheet form action
       checkUpload : (e) ->
         valid = false
         if !this.selectedCategory
@@ -37,7 +35,7 @@ $(document).on "turbolinks:load", ->
         if !valid then e.preventDefault()
         valid
 
-      # Called on file selected
+      # Called on file selected to upload label
       selectFiles: (e) ->
         if e.target.files.length == 1
           this.fileName = e.target.files[0].name
@@ -45,14 +43,17 @@ $(document).on "turbolinks:load", ->
           this.fileName = e.target.files.length + " files selected."
         console.log("Selected file : " + this.filename)
 
-      # Fetch group datasheets
+      # Fetch group datasheets, called on category selected
       fetchDatasheets: () ->
         # Save selected category in a cookie
         Cookies.set('selectedCategory', this.selectedCategory)
         # Clear Alerts
+        this.notice = null
         this.alert = null
-        this.datasheetsUrl = "/datasheet_categories/" + this.selectedCategory + "/datasheets"
+        # Clear datasheet items list
         this.datasheetItems = []
+        # Fetch parameters
+        this.datasheetsUrl = "/datasheet_categories/" + this.selectedCategory + "/datasheets"
         options =
           method: "GET"
           headers:
@@ -62,6 +63,7 @@ $(document).on "turbolinks:load", ->
         fetch(this.datasheetsUrl, options)
         .catch((err) ->
           console.log("Connection error : " + err)
+          appData.alert = "Connection error : " + err
           throw Error("Connection error")
           )
         # Return a JSON promise
@@ -73,6 +75,7 @@ $(document).on "turbolinks:load", ->
           )
         # Process the JSON response
         .then((json) ->
+            # Add received datasheets to our appData
             appData.datasheetItems.push(
                 datasheet: datasheet
                 selected: false
@@ -83,42 +86,83 @@ $(document).on "turbolinks:load", ->
       selectAll: () ->
         datasheetItem.selected = this.allSelected for datasheetItem in this.datasheetItems
 
+      # Delete selected datasheets
       deleteSelection: () ->
-
+        # ids of datasheets to delete
         datasheet_ids = []
+        # Fetch parameters
         createSelectionOptions =
           method: "POST"
-          hearders:
+          headers:
             "Content-Type": "application/json"
             "Accept": "application/json"
-
+        # Find selected datasheets
         datasheet_ids.push(datasheetItem.datasheet.id) \
           for datasheetItem in this.datasheetItems \
             when datasheetItem.selected
-
+        # Set request body
         createSelectionOptions.body = JSON.stringify(
-            type: "delete"
+            datasheet_category_id: this.selectedCategory
+            selection_type: "delete"
             datasheet_ids: datasheet_ids
             )
 
-        console.log(createSelectionOptions.body)
-        console.log("Create selection : " + datasheet_ids)
         if datasheet_ids.length > 0
-          fetch("/datasheet_selections", createSelectionOptions)
-          .catch((err) ->
-            console.log("Connection error : " + err)
-            throw Error("Connection error")
-            )
-          # Return a JSON promise
-          .then((response) ->
-            if response.ok
-              response.json()
-            else
-              []
-            )
-          .then((json) ->
-            console.log(json)
-            )
+          if confirm("Do you really want to delete selection?")
+            console.log("Create selection : " + datasheet_ids)
+            # Firstly, we create a selection that contains the datasheets to be deleted
+            fetch("/datasheet_selections", createSelectionOptions)
+            .catch((err) ->
+              console.log("Connection error : " + err)
+              appData.alert = "Connection error : " + err
+              throw Error("Connection error")
+              )
+            # Return a JSON promise
+            .then((response) ->
+              if response.ok
+                response.json()
+              else
+                []
+              )
+            .then((json) ->
+              console.log(json)
+              # Once the selection has been created, we delete it with its datasheets
+              deleteSelectionOptions =
+                method: "DELETE"
+                headers:
+                  "Accept": "application/json"
+
+              # Delete selection and its datasheets
+              fetch("/datasheet_selections/" + json.id, deleteSelectionOptions)
+              .catch((err) ->
+                console.log("Connection error : " + err)
+                appData.alert = "Connection error : " + err
+                throw Error("Connection error")
+                )
+              .then((response) ->
+                if response.ok
+                  response.json()
+                else
+                  []
+                )
+              .then((json) ->
+                console.log("Selection deleted.")
+                # The server returns the updated datasheets list for this category
+                appData.datasheetItems = []
+                appData.datasheetItems.push(
+                  datasheet: datasheet
+                  selected: false
+                ) for datasheet in json
+                # Uncheck allselected in case it was
+                appData.allSelected = false
+                # Notice success
+                appData.alert = null
+                if datasheet_ids.length > 1
+                  appData.notice = datasheet_ids.length + " datasheets deleted."
+                else
+                  appData.notice = "1 datasheet deleted."
+                )
+              )
 
       # Used to print dates in the table
       formatDate: (dateString) ->

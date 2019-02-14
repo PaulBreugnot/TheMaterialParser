@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_13_162151) do
+ActiveRecord::Schema.define(version: 2019_02_14_093533) do
 
   create_table "datasheet_categories", force: :cascade do |t|
     t.string "name"
@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(version: 2019_02_13_162151) do
     t.boolean "saved"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "datasheet_category_id"
+    t.index ["datasheet_category_id"], name: "index_datasheet_selections_on_datasheet_category_id"
   end
 
   create_table "datasheet_selections_datasheets", id: false, force: :cascade do |t|

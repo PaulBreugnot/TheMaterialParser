@@ -16,20 +16,25 @@ class DatasheetsController < ApplicationController
 
   def create
     @datasheet_category = DatasheetCategory.find(params[:datasheet][:datasheet_category_id])
+    added_datasheets = []
     params[:datasheet][:pdfDatasheet].each do |pdfFile|
-      @datasheet = @datasheet_category.datasheets.create({name: pdfFile.original_filename, pdfDatasheet: pdfFile})
+      added_datasheets.push(@datasheet_category.datasheets.create({name: pdfFile.original_filename, pdfDatasheet: pdfFile}))
     end
-    # @datasheet = @datasheet_category.datasheets.create(datasheet_params)
-    #
+
     respond_to do |format|
       format.html {
         if @datasheet
-          redirect_to home_index_path, notice: "Datasheet #{@datasheet.name} has been uploaded to #{@datasheet_category.name}."
+          if params[:datasheet][:pdfDatasheet].length > 1
+            label = "#{params[:datasheet][:pdfDatasheet].length} datasheets"
+          else
+            label = "Datasheet #{@datasheet.name}"
+          end
+          redirect_to home_index_path, notice: "#{label} has been uploaded to #{@datasheet_category.name}."
         else
           redirect_to home_index_path, alert: "An error occured."
         end
         }
-      format.json { render json: @datasheet }
+      format.json { render json: added_datasheets }
     end
   end
 
