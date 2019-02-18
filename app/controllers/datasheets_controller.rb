@@ -23,7 +23,7 @@ class DatasheetsController < ApplicationController
 
     respond_to do |format|
       format.html {
-        if @datasheet
+        if @datasheet_category.datasheets
           if params[:datasheet][:pdfDatasheet].length > 1
             label = "#{params[:datasheet][:pdfDatasheet].length} datasheets"
           else

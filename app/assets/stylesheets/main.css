@@ -9,6 +9,22 @@
    margin: auto;
  }
 
+ .tab_body {
+   background-color: rgba(115, 115, 115, 0.3);
+   width: 100%;
+   min-height: 600px;
+   border-radius: 8px;
+   margin-top: 8px;
+   padding: 1px 0px 0px 0px;
+   text-align:center;
+ }
+
+ .table th, .table td {
+   text-align: center;
+   vertical-align: middle !important;
+ }
+
+
 /* Used to hide the ugly default input file */
 .upload-btn-wrapper {
   position: relative;
@@ -29,4 +45,11 @@
 
 .alert {
   margin: 10px 10px 10px;
+}
+
+
+.file_name_label {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin: 0 5px;
 }

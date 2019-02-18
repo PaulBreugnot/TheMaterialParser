@@ -7,7 +7,10 @@ Rails.application.routes.draw do
 
   get 'home/index'
 
-  resources :datasheet_categories, only: [:index, :create] do
+  put 'datasheet_categories', to: "datasheet_categories#update"
+  put 'datasheet_categories/logo', to: "datasheet_categories#remove_logo"
+
+  resources :datasheet_categories, only: [:index, :create, :destroy] do
     resources :datasheets, only: [:index, :create]
   end
 

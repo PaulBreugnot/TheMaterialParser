@@ -1,0 +1,15 @@
+<div class="tab_body" id="categories_view">
+
+  <%= render 'alert_block'%>
+
+  <div v-if="!selectedCategory">
+    <%= render 'new_category'%>
+  </div>
+
+  <div v-else>
+    <%= render 'edit_category'%>
+  </div>
+
+  <%= render 'categories_grid' %>
+
+</div>

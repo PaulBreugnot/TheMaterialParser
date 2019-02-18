@@ -6,6 +6,9 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Remove opened files limit
+Rack::Utils.multipart_part_limit = 0
+
 module PrProject
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

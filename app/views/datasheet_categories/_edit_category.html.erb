@@ -1,0 +1,26 @@
+<%= form_tag({controller: "datasheet_categories"}, method: :put, multipart:true, class: "form-inline") do %>
+
+  <%= hidden_field_tag(:id, nil, {"v-model": "selectedCategory.id"}) %>
+
+  <div class="form-group upload-btn-wrapper btn btn-warning">
+    <%= file_field :datasheet_category, :logo, "v-on:change": "selectLogo", class: "inputfile" %>
+    <label>Select logo</label>
+  </div>
+
+  <label class="file_name_label"> {{ editLogoName }} </label>
+
+  <div class="form-group column">
+    <%= text_field :datasheet_category, :name, placeholder: "New Category", class: "form-control", id:"category_name", "v-model":"selectedCategory.name" %>
+  </div>
+
+  <div class="form-group column">
+    <%= submit_tag("Edit Category", class: "btn btn-info") %>
+  </div>
+<% end %>
+
+<%= form_tag({controller: "datasheet_categories", action:"remove_logo"}, method: :put, class: "form-inline") do %>
+
+  <%= hidden_field_tag(:id, nil, {"v-model": "selectedCategory.id"}) %>
+  <%= submit_tag("Delete Logo", class: "btn btn-danger") %>
+
+<% end %>

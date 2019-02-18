@@ -17,6 +17,7 @@ class DatasheetSelectionsController < ApplicationController
   def destroy
     @datasheetSelection = DatasheetSelection.find(params[:id])
     datasheetsCount = @datasheetSelection.datasheets.length
+
     if @datasheetSelection.selection_type == "delete"
       @datasheetSelection.datasheets.each do |datasheet|
         # Delete selection datasheets

@@ -11,12 +11,6 @@
   margin: 0px 5px;
 }
 
-#file_name_label {
-  font-style: bold;
-  font-size: 1.2em;
-  margin: 0 5px;
-}
-
 .titleButtonsBlock {
   width: 100%;
   display: inline-flex;

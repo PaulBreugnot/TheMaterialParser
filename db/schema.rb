@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_14_093533) do
+ActiveRecord::Schema.define(version: 2019_02_18_075601) do
 
   create_table "datasheet_categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "logo"
   end
 
   create_table "datasheet_selections", force: :cascade do |t|

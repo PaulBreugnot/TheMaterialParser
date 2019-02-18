@@ -1,18 +1,12 @@
-#home_view {
-  background-color: rgba(115, 115, 115, 0.3);
-  width: 100%;
-  min-height: 600px;
-  border-radius: 8px;
-  margin-top: 8px;
-  padding: 1px 0px 0px 0px;
-  text-align:center;
-}
-
-.table th, .table td {
-  text-align: center;
-  vertical-align: middle !important;
-}
-
 #categories_menu {
   display: inline-block;
+}
+
+.category-card {
+  margin-bottom: 20px
+}
+
+.card img {
+  margin: auto;
+  width: 13em;
 }
