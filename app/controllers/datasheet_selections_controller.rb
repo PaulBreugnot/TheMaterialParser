@@ -3,7 +3,6 @@ class DatasheetSelectionsController < ApplicationController
   def create
     @datasheetSelection = DatasheetSelection.new(datasheet_selections_params)
     params[:datasheet_ids].each do |id|
-      puts "Hey"
       @datasheetSelection.datasheets.push(Datasheet.find(id))
     end
     puts @datasheetSelection.datasheets
@@ -11,6 +10,14 @@ class DatasheetSelectionsController < ApplicationController
 
     respond_to do |format|
       format.json { render json: @datasheetSelection }
+    end
+  end
+
+  def show
+    datasheets = DatasheetSelection.find(params[:id]).datasheets 
+
+    respond_to do |format|
+      format.json { render json: datasheets }
     end
   end
 

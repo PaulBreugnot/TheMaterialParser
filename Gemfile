@@ -44,3 +44,6 @@ gem 'carrierwave', '~> 1.0'
 # Bootstrap
 gem 'bootstrap'
 gem 'jquery-rails'
+
+# PDF.js
+gem 'pdfjs_viewer-rails'

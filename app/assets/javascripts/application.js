@@ -18,3 +18,4 @@
 //= require bootstrap
 //= require home
 //= require datasheet_categories
+//= require datasheet_process

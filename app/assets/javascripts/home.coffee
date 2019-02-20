@@ -164,6 +164,45 @@ $(document).on "turbolinks:load", ->
                 )
               )
 
+      processSelection: () ->
+        # ids of datasheets to process
+        datasheet_ids = []
+        # Fetch parameters
+        createSelectionOptions =
+          method: "POST"
+          headers:
+            "Content-Type": "application/json"
+            "Accept": "application/json"
+        # Find selected datasheets
+        datasheet_ids.push(datasheetItem.datasheet.id) \
+          for datasheetItem in this.datasheetItems \
+            when datasheetItem.selected
+        # Set request body
+        createSelectionOptions.body = JSON.stringify(
+            datasheet_category_id: this.selectedCategory
+            selection_type: "process"
+            datasheet_ids: datasheet_ids
+            )
+
+        console.log("Create selection : " + datasheet_ids)
+        # Firstly, we create a selection that contains the datasheets to be deleted
+        fetch("/datasheet_selections", createSelectionOptions)
+        .catch((err) ->
+          console.log("Connection error : " + err)
+          appData.alert = "Connection error : " + err
+          throw Error("Connection error")
+          )
+        # Return a JSON promise
+        .then((response) ->
+          if response.ok
+            response.json()
+          else
+            []
+          )
+        .then((json) ->
+          window.location.href = "/datasheet_process/?selection_id=" + json.id
+          )
+
       # Used to print dates in the table
       formatDate: (dateString) ->
         date = new Date(dateString)

@@ -1,0 +1,69 @@
+<div id="control_div">
+
+  <nav class="nav nav-pills nav-justified">
+    <a class="nav-item nav-link active" href="#">Compositon</a>
+    <a class="nav-item nav-link" href="#">Physical Properties</a>
+    <a class="nav-item nav-link" href="#">Mechanical Properties</a>
+  </nav>
+
+  <form class="form-inline">
+    <select class="form-control" placeholder="templates">
+      <option> template 1 </option>
+      <option> template 2 </option>
+    </select>
+  </form>
+
+  <h5> Currently Selected Areas </h5>
+  <div id="selection_table" class="table-wrapper-scroll-y">
+    <table class = "table table-hover">
+       <thead>
+          <tr>
+             <th>View</th>
+             <th>Page</th>
+             <th>Size</th>
+             <th>Remove</th>
+          </tr>
+       </thead>
+
+       <tbody>
+         <!-- datasheet items contain the original datasheet as given by the server, and a selected parameter. -->
+             <tr>
+                <td><button class="btn btn-info"> View selection </button></td>
+                <td> 1 </td>
+                <td> 64x64 </td>
+                <td><button class="btn btn-danger">Remove</button></td>
+             </tr>
+             <tr>
+                <td><button class="btn btn-info"> View selection </button></td>
+                <td> 1 </td>
+                <td> 64x64 </td>
+                <td><button class="btn btn-danger">Remove</button></td>
+             </tr>
+             <tr>
+                <td><button class="btn btn-info"> View selection </button></td>
+                <td> 1 </td>
+                <td> 64x64 </td>
+                <td><button class="btn btn-danger">Remove</button></td>
+             </tr>
+       </tbody>
+    </table>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <form class="form-inline">
+          <input class="form-control" placeholder="Template name">
+          <button type="submit" class="btn btn-warning">Save Template</button>
+        </form>
+      </div>
+      <div class="col-sm">
+        <form class="form-inline">
+          <button class="btn btn-success">Extract data!</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+</div>

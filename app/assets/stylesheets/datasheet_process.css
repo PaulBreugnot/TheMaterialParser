@@ -1,0 +1,38 @@
+#top_row {
+  margin: 8px 0px 0px;
+  height: 30%;
+}
+
+#main_row {
+  margin: 0px;
+  padding-bottom: 18px;
+  height: 70%;
+}
+
+#datasheets_column {
+  padding-right: 0px;
+}
+
+#pdf_column {
+  padding-left: 0px;
+}
+
+#datasheets_list, #control_div {
+  height: 100%;
+  background-color: LightGrey;
+}
+
+.table-wrapper-scroll-y {
+  display: block;
+  overflow-y: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+#selection_table {
+  max-height: 35%;
+}
+
+#datasheet_table {
+  height: 100%;
+  background-color: white;
+}

@@ -1,7 +1,15 @@
-<div class="titleButtonsBlock">
-  <button class="btn btn-success">Process Selection</button>
-  <h2>Uploaded Datasheets</h2>
-  <button class="btn btn-danger" v-on:click="deleteSelection">Delete Selection</button>
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <button class="btn btn-success" v-on:click="processSelection">Process Selection</button>
+    </div>
+    <div class="col-sm">
+      <h2>Uploaded Datasheets</h2>
+    </div>
+    <div class="col-sm">
+      <button class="btn btn-danger" v-on:click="deleteSelection">Delete Selection</button>
+    </div>
+  </div>
 </div>
 
 <table class = "table table-hover">

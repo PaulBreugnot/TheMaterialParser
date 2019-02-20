@@ -1,10 +1,14 @@
+html {
+  height: 100%;
+}
+
  #main_title {
    text-align: center;
  }
 
- #root_view {
+ .root_view {
    background-color: LightGrey;
-   width: 60%;
+   width: 80%;
    height: 100%;
    margin: auto;
  }
@@ -12,7 +16,7 @@
  .tab_body {
    background-color: rgba(115, 115, 115, 0.3);
    width: 100%;
-   min-height: 600px;
+   height: 88%;
    border-radius: 8px;
    margin-top: 8px;
    padding: 1px 0px 0px 0px;
