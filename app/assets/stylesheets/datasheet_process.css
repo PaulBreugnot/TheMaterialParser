@@ -19,7 +19,6 @@
 
 #datasheets_list, #control_div {
   height: 100%;
-  background-color: LightGrey;
 }
 
 .table-wrapper-scroll-y {
@@ -35,4 +34,11 @@
 #datasheet_table {
   height: 100%;
   background-color: white;
+}
+
+.selection_area {
+  position: fixed;
+  background-color: rgb(0, 0, 255, 0.3);
+  border-style: dashed;
+  border-color: blue;
 }

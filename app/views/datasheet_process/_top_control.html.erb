@@ -26,25 +26,12 @@
        </thead>
 
        <tbody>
-         <!-- datasheet items contain the original datasheet as given by the server, and a selected parameter. -->
-             <tr>
-                <td><button class="btn btn-info"> View selection </button></td>
-                <td> 1 </td>
-                <td> 64x64 </td>
-                <td><button class="btn btn-danger">Remove</button></td>
-             </tr>
-             <tr>
-                <td><button class="btn btn-info"> View selection </button></td>
-                <td> 1 </td>
-                <td> 64x64 </td>
-                <td><button class="btn btn-danger">Remove</button></td>
-             </tr>
-             <tr>
-                <td><button class="btn btn-info"> View selection </button></td>
-                <td> 1 </td>
-                <td> 64x64 </td>
-                <td><button class="btn btn-danger">Remove</button></td>
-             </tr>
+         <tr v-for="selection in selections">
+            <td><button class="btn btn-info"> View selection </button></td>
+            <td> {{ selection.page }} </td>
+            <td> {{ selectionSize(selection) }} </td>
+            <td><button class="btn btn-danger">Remove</button></td>
+         </tr>
        </tbody>
     </table>
   </div>

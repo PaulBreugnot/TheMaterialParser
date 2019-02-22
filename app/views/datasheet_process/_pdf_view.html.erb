@@ -1,2 +1,3 @@
-<iframe v-if="selectedDatasheet" v-bind:src="pdfjsUrl" style="width: 100%; height: 100%" width="100%" height="100%">
+<iframe id="pdfIframe" v-bind:src="pdfjsUrl" style="width: 100%; height: 100%" width="100%" height="100%" v-on:load="setupPdfIframe">
 </iframe>
+<selection-area v-if="currentSelection.active" v-bind:style="currentSelection.position"></selection-area>
