@@ -5,4 +5,12 @@ class DatasheetProcessController < ApplicationController
     render 'show'
   end
 
+  def processSelections
+    puts params[:selections]
+
+    respond_to do |format|
+      format.json {render json: {} }
+    end
+  end
+
 end

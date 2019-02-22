@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   get 'about/index'
 
   get 'datasheet_process', to: "datasheet_process#show"
+  post 'datasheet_process', to: "datasheet_process#processSelections"
 
   root 'home#index'
 end

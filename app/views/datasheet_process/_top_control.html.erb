@@ -6,12 +6,12 @@
     <a class="nav-item nav-link" href="#">Mechanical Properties</a>
   </nav>
 
-  <form class="form-inline">
+  <!-- <form class="form-inline">
     <select class="form-control" placeholder="templates">
       <option> template 1 </option>
       <option> template 2 </option>
     </select>
-  </form>
+  </form> -->
 
   <h5> Currently Selected Areas </h5>
   <div id="selection_table" class="table-wrapper-scroll-y">
@@ -38,16 +38,14 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-sm">
+      <!-- <div class="col-sm">
         <form class="form-inline">
           <input class="form-control" placeholder="Template name">
           <button type="submit" class="btn btn-warning">Save Template</button>
         </form>
-      </div>
+      </div> -->
       <div class="col-sm">
-        <form class="form-inline">
-          <button class="btn btn-success">Extract data!</button>
-        </form>
+        <button class="btn btn-success" v-on:click="extractData">Extract data!</button>
       </div>
     </div>
   </div>

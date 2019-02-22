@@ -180,6 +180,40 @@ $(document).on "turbolinks:load", ->
           "width:" + width + "px;" + \
           "height:" + height + "px;"
 
+      extractData: () ->
+        selectionsToSend =
+          selections: []
+        for selection in this.selections
+          selectionsToSend.selections.push(
+            datasheetId: this.selectedDatasheet.id
+            ratio: selection.ratio
+            page: selection.page
+            x: selection.x * selection.ratio
+            y: selection.y * selection.ratio
+            width: selection.width * selection.ratio
+            height: selection.height * selection.ratio
+          )
+        # Fetch parameters
+        createSelectionOptions =
+          method: "POST"
+          headers:
+            "Content-Type": "application/json"
+            "Accept": "application/json"
+          body: JSON.stringify(selectionsToSend)
+
+        fetch("/datasheet_process", createSelectionOptions)
+        .catch((err) ->
+          console.log("Connection error : " + err)
+          throw Error("Connection error")
+          )
+        # Return a JSON promise
+        .then((response) ->
+          if response.ok
+            response.json()
+          else
+            []
+          )
+
 
 
     mounted:
