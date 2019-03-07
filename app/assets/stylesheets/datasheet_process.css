@@ -39,6 +39,6 @@
 .selection_area {
   position: fixed;
   background-color: rgb(0, 0, 255, 0.3);
-  border-style: dashed;
-  border-color: blue;
+  outline: 4px dashed blue;
+  outline-offset:0px;
 }

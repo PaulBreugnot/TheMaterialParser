@@ -13,7 +13,7 @@ selectionDeepCopy = (selection) ->
   selectionCopy =
     active: selection.active
     page: selection.page
-    ratio: selection.ratio
+    canvasWidth: selection.canvasWidth
     x: selection.x
     y: selection.y
     width: selection.width
@@ -33,7 +33,7 @@ $(document).on "turbolinks:load", ->
     currentSelection:
       active: false
       page: null
-      ratio: 0
+      canvasWidth: null
       x: 0
       y: 0
       width: 0
@@ -111,9 +111,9 @@ $(document).on "turbolinks:load", ->
 
             appData.currentSelection.active = true
             pdfViewWidth = parseInt(e.target.style.width.match(/\d+/)[0])
-            appData.currentSelection.ratio =
-              # Real pdf width / pdf canvas width
-              e.target.width / pdfViewWidth
+            console.log(e.target)
+            console.log("Canvas width :" + pdfViewWidth)
+            appData.currentSelection.canvasWidth = parseInt(e.target.style.width.match(/\d+/)[0])
 
             appData.currentSelection.page = parseInt(e.target.id.match(/\d+/)[0])
             vueInstance.updateActiveSelection(xPos, yPos, 0, 0)
@@ -142,23 +142,34 @@ $(document).on "turbolinks:load", ->
           (e) ->
             if appData.currentSelection.active
               appData.currentSelection.active = false
-              appData.selections.push(
-                # Current selection deep clone
-                selectionDeepCopy(appData.currentSelection)
-                )
-              console.log(appData.selections)
 
-              viewerLeftOffset = $("#pdfIframe").contents().find("#viewer").offset().left
-              viewerTopOffset = $("#pdfIframe").contents().find("#viewer").offset().top
+              canvasWrapperSelector = ".page[data-page-number=\"#{appData.currentSelection.page}\"] .canvasWrapper"
+              canvasLeftOffset = $("#pdfIframe").contents().find(canvasWrapperSelector).offset().left
+              canvasTopOffset = $("#pdfIframe").contents().find(canvasWrapperSelector).offset().top
 
+              xRelativeToCanvas = appData.currentSelection.x - leftOffset - canvasLeftOffset
+              yRelativeToCanvas = appData.currentSelection.y - topOffset - canvasTopOffset
               vueInstance.updateActiveSelection(
-                appData.currentSelection.x - leftOffset - viewerLeftOffset - 9
-                appData.currentSelection.y - topOffset - viewerTopOffset - 9
+                xRelativeToCanvas
+                yRelativeToCanvas
                 appData.currentSelection.width
                 appData.currentSelection.height
               )
-              $("#pdfIframe").contents().find("#viewer").append(
-                '<div style="' + appData.currentSelection.position + 'position:absolute;background-color:rgb(255, 0, 0, 0.3);border-style:dashed;border-color:red;"></div>'
+
+              appData.selections.push(
+                  selectionDeepCopy(appData.currentSelection)
+                )
+              console.log(appData.selections)
+
+              # viewerLeftOffset = $("#pdfIframe").contents().find("#viewer").offset().left
+              # viewerTopOffset = $("#pdfIframe").contents().find("#viewer").offset().top
+
+              console.log(appData.currentSelection)
+              # $("#pdfIframe").contents().find("#viewer").append(
+              #   '<div style="' + appData.currentSelection.position + 'position:absolute;background-color:rgb(255, 0, 0, 0.3);outline: 4px dashed red; outline-offset:0px"></div>'
+              # )
+              $("#pdfIframe").contents().find(canvasWrapperSelector).append(
+                '<div style="' + appData.currentSelection.position + 'position:absolute;background-color:rgb(255, 0, 0, 0.3);outline: 4px dashed red; outline-offset:0px"></div>'
               )
           )
 
@@ -167,7 +178,7 @@ $(document).on "turbolinks:load", ->
           )
 
       selectionSize: (selection) ->
-        selection.width * selection.ratio + "x" + selection.height * selection.ratio
+        selection.width + "x" + selection.height
 
       updateActiveSelection: (x, y, width, height) ->
         this.currentSelection.x = x
@@ -186,12 +197,12 @@ $(document).on "turbolinks:load", ->
         for selection in this.selections
           selectionsToSend.selections.push(
             datasheetId: this.selectedDatasheet.id
-            ratio: selection.ratio
             page: selection.page
-            x: selection.x * selection.ratio
-            y: selection.y * selection.ratio
-            width: selection.width * selection.ratio
-            height: selection.height * selection.ratio
+            canvasWidth: selection.canvasWidth
+            x: selection.x
+            y: selection.y
+            width: selection.width
+            height: selection.height
           )
         # Fetch parameters
         createSelectionOptions =
