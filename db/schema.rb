@@ -10,7 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_18_075601) do
+ActiveRecord::Schema.define(version: 2019_03_07_094135) do
+
+  create_table "components", force: :cascade do |t|
+    t.string "name"
+    t.float "value"
+    t.float "minValue"
+    t.float "maxValue"
+    t.boolean "balance"
+    t.boolean "range"
+    t.boolean "residual"
+    t.integer "composition_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["composition_id"], name: "index_components_on_composition_id"
+  end
+
+  create_table "compositions", force: :cascade do |t|
+    t.integer "material_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["material_id"], name: "index_compositions_on_material_id"
+  end
 
   create_table "datasheet_categories", force: :cascade do |t|
     t.string "name"
@@ -41,7 +62,15 @@ ActiveRecord::Schema.define(version: 2019_02_18_075601) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "datasheet_category_id"
+    t.integer "material_id"
     t.index ["datasheet_category_id"], name: "index_datasheets_on_datasheet_category_id"
+    t.index ["material_id"], name: "index_datasheets_on_material_id"
+  end
+
+  create_table "materials", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

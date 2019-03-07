@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  value: 1.5
+  minValue: 1.5
+  maxValue: 1.5
+  balance: false
+  range: false
+  residual: false
+
+two:
+  name: MyString
+  value: 1.5
+  minValue: 1.5
+  maxValue: 1.5
+  balance: false
+  range: false
+  residual: false
