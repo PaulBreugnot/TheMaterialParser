@@ -27,6 +27,7 @@ $(document).on "turbolinks:load", ->
 
   # Vue data definition
   appData =
+    datasheet_selection_id: null
     datasheets: []
     selectedDatasheet: null
     selections : []
@@ -55,11 +56,11 @@ $(document).on "turbolinks:load", ->
     methods:
       fetchDatasheets: () ->
           parsedUrl = new URL(window.location.href)
-          selection_id = parsedUrl.searchParams.get("selection_id")
-          console.log(selection_id)
+          this.datasheet_selection_id = parsedUrl.searchParams.get("selection_id")
+          console.log(this.datasheet_selection_id)
 
           # Fetch parameters
-          this.datasheetsUrl = "/datasheet_selections/" + selection_id
+          this.datasheetsUrl = "/datasheet_selections/" + this.datasheet_selection_id
           options =
             method: "GET"
             headers:
@@ -193,9 +194,11 @@ $(document).on "turbolinks:load", ->
 
       extractData: () ->
         selectionsToSend =
-          selections: []
+          datasheet_process:
+            datasheet_selection_id: this.datasheet_selection_id
+            selections: []
         for selection in this.selections
-          selectionsToSend.selections.push(
+          selectionsToSend.datasheet_process.selections.push(
             datasheetId: this.selectedDatasheet.id
             page: selection.page
             canvasWidth: selection.canvasWidth
