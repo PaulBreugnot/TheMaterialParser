@@ -20,6 +20,12 @@ selectionDeepCopy = (selection) ->
     height: selection.height
     position: selection.position
 
+injectSelectionInIframe = (page_number, selection_position) ->
+  canvasWrapperSelector = ".page[data-page-number=\"#{page_number}\"] .canvasWrapper"
+  $("#pdfIframe").contents().find(canvasWrapperSelector).append(
+    '<div style="' + selection_position + 'position:absolute;background-color:rgb(255, 0, 0, 0.3);outline: 4px dashed red; outline-offset:0px"></div>'
+  )
+
 Vue.component('selection-area', SelectionArea)
 
 $(document).on "turbolinks:load", ->
@@ -112,7 +118,6 @@ $(document).on "turbolinks:load", ->
 
         $("#pdfIframe").contents().find(".textLayer").hide()
 
-        console.log($("#pdfIframe").offset())
         leftOffset = $("#pdfIframe").offset().left
         topOffset = $("#pdfIframe").offset().top
 
@@ -183,14 +188,20 @@ $(document).on "turbolinks:load", ->
               # $("#pdfIframe").contents().find("#viewer").append(
               #   '<div style="' + appData.currentSelection.position + 'position:absolute;background-color:rgb(255, 0, 0, 0.3);outline: 4px dashed red; outline-offset:0px"></div>'
               # )
-              $("#pdfIframe").contents().find(canvasWrapperSelector).append(
-                '<div style="' + appData.currentSelection.position + 'position:absolute;background-color:rgb(255, 0, 0, 0.3);outline: 4px dashed red; outline-offset:0px"></div>'
-              )
+              injectSelectionInIframe(appData.currentSelection.page, appData.currentSelection.position)
+              # $("#pdfIframe").contents().find(canvasWrapperSelector).append(
+              #   '<div style="' + appData.currentSelection.position + 'position:absolute;background-color:rgb(255, 0, 0, 0.3);outline: 4px dashed red; outline-offset:0px"></div>'
+              # )
           )
 
         $("#pdfIframe").contents().find("#viewer").mousemove(() ->
           $("#pdfIframe").contents().find(".textLayer").hide()
           )
+        setTimeout(
+          () -> (injectSelectionInIframe(selection.page, selection.position)
+          console.log(selection.page)) for selection in appData.selections,
+          2000);
+
 
       selectionSize: (selection) ->
         selection.width + "x" + selection.height

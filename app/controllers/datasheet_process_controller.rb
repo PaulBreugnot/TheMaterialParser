@@ -20,7 +20,8 @@ class DatasheetProcessController < ApplicationController
 
       material = Material.new
       params[:datasheet_process][:selections].each do |selection|
-      #  if datasheet.id == selection[:datasheetId]
+        #if datasheet.id == selection[:datasheetId]
+        if !material.composition # No valid composition extracted yet
           # Tabula process
 
           ## Load the PDF datasheet from public storage
@@ -56,6 +57,7 @@ class DatasheetProcessController < ApplicationController
 
           material.composition = Composition.parseFromCsv(csv)
         end
+        
         if material.composition
           ActionCable.server.broadcast(
             "process_#{params[:datasheet_process][:datasheet_selection_id]}",
@@ -71,6 +73,7 @@ class DatasheetProcessController < ApplicationController
             status: 'warning',
           )
         end
+      end
     #  end
     end
 
