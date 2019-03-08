@@ -28,7 +28,7 @@ $(document).on "turbolinks:load", ->
   # Vue data definition
   appData =
     datasheet_selection_id: null
-    datasheets: []
+    datasheets: {}
     selectedDatasheet: null
     selections : []
     currentSelection:
@@ -50,7 +50,7 @@ $(document).on "turbolinks:load", ->
       pdfjsUrl: () ->
         url = ""
         if this.selectedDatasheet
-          url = "/pdfjs/minimal?file=" + this.selectedDatasheet.pdfDatasheet.url
+          url = "/pdfjs/minimal?file=" + this.selectedDatasheet.datasheet.pdfDatasheet.url
         url
 
     methods:
@@ -82,12 +82,26 @@ $(document).on "turbolinks:load", ->
           # Process the JSON response
           .then((json) ->
               # Add received datasheets to our appData
-              appData.datasheets.push(
-                  datasheet
+              Vue.set(
+                appData.datasheets,
+                datasheet.id,
+                  datasheet: datasheet
+                  status:'waiting'
+                  selected: false
                   ) for datasheet in json
+              console.log(appData.datasheets)
             )
 
+      setupAppCable: () ->
+        App.cable.subscriptions.create { channel: "ProcessChannel", datasheet_selection_id: appData.datasheet_selection_id },
+          received: (data) ->
+            console.log(data)
+            appData.datasheets[data['datasheet_id']].status = data['status']
+
       selectDatasheet: (datasheet) ->
+        if this.selectedDatasheet
+          this.selectedDatasheet.selected = false
+        datasheet.selected = true
         this.selectedDatasheet = datasheet
 
 
@@ -231,5 +245,7 @@ $(document).on "turbolinks:load", ->
 
 
     mounted:
-      () -> this.fetchDatasheets()
+      () ->
+        this.fetchDatasheets()
+        this.setupAppCable()
   })

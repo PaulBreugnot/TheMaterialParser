@@ -55,10 +55,21 @@ class DatasheetProcessController < ApplicationController
           csv = sb.toString();
 
           material.composition = Composition.parseFromCsv(csv)
-          if material.composition
-            puts material.composition.inspect
-            puts material.composition.components.inspect
-          end
+        end
+        if material.composition
+          ActionCable.server.broadcast(
+            "process_#{params[:datasheet_process][:datasheet_selection_id]}",
+            datasheet_id: datasheet.id,
+            status: 'ok',
+          )
+          puts material.composition.inspect
+          puts material.composition.components.inspect
+        else
+          ActionCable.server.broadcast(
+            "process_#{params[:datasheet_process][:datasheet_selection_id]}",
+            datasheet_id: datasheet.id,
+            status: 'warning',
+          )
         end
     #  end
     end

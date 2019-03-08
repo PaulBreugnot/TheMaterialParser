@@ -3,12 +3,16 @@
      <thead>
         <tr>
            <th>Datasheets</th>
+           <th>Status</th>
         </tr>
      </thead>
      <tbody>
-        <tr v-for="datasheet in datasheets" v-on:click="selectDatasheet(datasheet)">
-          <td v-if="selectedDatasheet && (datasheet.id == selectedDatasheet.id)" class="table-active"> {{ datasheet.name }} </td>
-          <td v-else> {{ datasheet.name }} </td>
+        <tr v-for="(datasheet_item, datasheet_id) in datasheets" v-on:click="selectDatasheet(datasheet_item)">
+          <td v-bind:class="{ 'table-active': datasheet_item.selected }"> {{ datasheet_item.datasheet.name }} </td>
+
+          <td v-if="datasheet_item.status=='ok'" v-bind:class="{ 'table-active': datasheet_item.selected }"><i class="far fa-check-circle"></i></td>
+          <td v-else-if="datasheet_item.status=='warning'" v-bind:class="{ 'table-active': datasheet_item.selected }"><i class="fas fa-exclamation-circle"></i></td>
+          <td v-else v-bind:class="{ 'table-active': datasheet_item.selected }"><i class="far fa-circle"></i></td>
         </tr>
      </tbody>
   </table>
