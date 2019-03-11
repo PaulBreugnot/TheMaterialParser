@@ -28,7 +28,8 @@
 }
 
 #selection_table {
-  max-height: 50%;
+  margin-top: 5px;
+  max-height: 70%;
 }
 
 #datasheet_table {
@@ -41,4 +42,8 @@
   background-color: rgb(0, 0, 255, 0.3);
   outline: 4px dashed blue;
   outline-offset:0px;
+}
+
+.nav-pills > .active, .nav-pills > .active{
+    background-color: #CD853F !important;
 }

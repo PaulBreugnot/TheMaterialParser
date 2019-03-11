@@ -30,14 +30,14 @@ injectSelectionInIframe = (selection) ->
   $("#pdfIframe").contents().find(canvasWrapperSelector).append(
     # We use the pair x / y to generate a "unique" id
     """
-    <div id="#{selection.x}_#{Math.floor(selection.y)}" class="selection"
+    <div id="#{Math.floor(selection.x)}_#{Math.floor(selection.y)}" class="selection"
       style="#{selection.position}position:absolute;background-color:#{selection.backgroundColor};outline: 4px dashed #{selection.borderColor}; outline-offset:0px"
     ></div>
     """
   )
 
 removeSelectionFromIframe = (selection) ->
-  $("#pdfIframe").contents().find("##{selection.x}_#{Math.floor(selection.y)}").remove()
+  $("#pdfIframe").contents().find("##{Math.floor(selection.x)}_#{Math.floor(selection.y)}").remove()
 
 Vue.component('selection-area', SelectionArea)
 
