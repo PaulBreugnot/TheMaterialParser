@@ -49,15 +49,15 @@ class DatasheetProcessController < ApplicationController
           oe.close()
 
           ## Extract table
-          bea = Java::TechnologyTabulaExtractors::BasicExtractionAlgorithm.new();
-          table = bea.extract(area).get(0);
-          sb = Java::JavaLang::StringBuilder.new();
-          (Java::TechnologyTabulaWriters::CSVWriter.new()).write(sb, table);
-          csv = sb.toString();
+          bea = Java::TechnologyTabulaExtractors::BasicExtractionAlgorithm.new()
+          table = bea.extract(area).get(0)
+          sb = Java::JavaLang::StringBuilder.new()
+          (Java::TechnologyTabulaWriters::CSVWriter.new()).write(sb, table)
+          csv = sb.toString()
 
-          material.composition = Composition.parseFromCsv(csv)
+          material.composition = Composition.parseFromCsv(csv, orientation=selection[:orientation].to_sym, headers=selection[:headers])
         end
-        
+
         if material.composition
           ActionCable.server.broadcast(
             "process_#{params[:datasheet_process][:datasheet_selection_id]}",

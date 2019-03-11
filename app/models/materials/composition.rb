@@ -6,28 +6,39 @@ class Composition < ApplicationRecord
   belongs_to :material
   has_many :components
 
-  def self.parseFromCsv(csv, orientation=:vertical)
+  def self.parseFromCsv(csv, orientation=:vertical, headers=true)
     composition = Composition.new
     # composition.components = []
     puts "Parsing composition from csv..."
     puts csv
 
-    if orientation==:vertical
-      table = CSV.parse(csv, headers: true)
-    else
-      table = CSV.parse(csv)
-    end
+    table = CSV.parse(csv, headers: headers)
+    table = CSV.parse(csv, headers: headers)
 
-    table.by_col.each do |csvCol|
-      puts "col : #{csvCol}"
+    if orientation==:vertical
+      puts "Processing by column."
+      data = table.by_col
+    else
+      puts "Processing by row."
+      data = table.by_row
+    end
+    data.each do |entry|
+      puts "entry : #{entry}"
       component = Component.new
-      component.name = csvCol[0]
-      if AvailablePeriodicElements.checkElement(component.name)
+      potentialName = Component.parseName(entry[0])
+      if potentialName
+        component.name = potentialName
+        if orientation==:vertical
+          value = entry[1][0]
+        else
+          value = entry[1]
+        end
+      # if AvailablePeriodicElements.checkElement(component.name)
         puts "Component OK"
         component.name = AvailablePeriodicElements.getSymbol(component.name)
-        component.balance = Component.isRawValueBalanced?(csvCol[1][0])
-        component.residual = Component.isRawValueResidual?(csvCol[1][0])
-        values = Component.extractValues(csvCol[1][0])
+        component.balance = Component.isRawValueBalanced?(value)
+        component.residual = Component.isRawValueResidual?(value)
+        values = Component.extractValues(value)
         if values.size > 0
           if values.size == 2
             component.range = true
