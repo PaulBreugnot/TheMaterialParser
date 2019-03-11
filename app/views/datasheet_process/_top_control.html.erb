@@ -19,18 +19,30 @@
        <thead>
           <tr>
              <th>View</th>
+             <th>Datasheet</th>
              <th>Page</th>
-             <th>Size</th>
+             <th>Table Orientation</th>
+             <th>Headers</th>
              <th>Remove</th>
           </tr>
        </thead>
 
        <tbody>
          <tr v-for="selection in selections">
-            <td><button class="btn btn-info"> View selection </button></td>
+            <td><button class="btn btn-info" v-on:click="viewSelection(selection)"> View selection </button></td>
+            <td> {{ selection.datasheet.datasheet.name }} </td>
             <td> {{ selection.page }} </td>
-            <td> {{ selectionSize(selection) }} </td>
-            <td><button class="btn btn-danger">Remove</button></td>
+            <td>
+              <div class="radio">
+                <label><input type="radio" value="horizontal" v-model="selection.orientation">Horizontal</label>
+              </div>
+              <div class="radio">
+                <label><input type="radio" value="vertical" v-model="selection.orientation">Vertical</label>
+              </div>
+            </td>
+
+            <td><input type="checkbox" v-model="selection.headers"></td>
+            <td><button class="btn btn-danger" v-on:click="deleteSelection(selection)">Remove</button></td>
          </tr>
        </tbody>
     </table>

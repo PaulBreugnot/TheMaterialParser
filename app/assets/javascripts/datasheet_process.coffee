@@ -12,19 +12,32 @@ SelectionArea = Vue.extend({
 selectionDeepCopy = (selection) ->
   selectionCopy =
     active: selection.active
+    datasheet: selection.datasheet
     page: selection.page
     canvasWidth: selection.canvasWidth
     x: selection.x
     y: selection.y
     width: selection.width
     height: selection.height
+    orientation: selection.orientation
+    headers: selection.headers
     position: selection.position
+    backgroundColor: selection.backgroundColor
+    borderColor: selection.borderColor
 
-injectSelectionInIframe = (page_number, selection_position) ->
-  canvasWrapperSelector = ".page[data-page-number=\"#{page_number}\"] .canvasWrapper"
+injectSelectionInIframe = (selection) ->
+  canvasWrapperSelector = ".page[data-page-number=\"#{selection.page}\"] .canvasWrapper"
   $("#pdfIframe").contents().find(canvasWrapperSelector).append(
-    '<div style="' + selection_position + 'position:absolute;background-color:rgb(255, 0, 0, 0.3);outline: 4px dashed red; outline-offset:0px"></div>'
+    # We use the pair x / y to generate a "unique" id
+    """
+    <div id="#{selection.x}_#{Math.floor(selection.y)}" class="selection"
+      style="#{selection.position}position:absolute;background-color:#{selection.backgroundColor};outline: 4px dashed #{selection.borderColor}; outline-offset:0px"
+    ></div>
+    """
   )
+
+removeSelectionFromIframe = (selection) ->
+  $("#pdfIframe").contents().find("##{selection.x}_#{Math.floor(selection.y)}").remove()
 
 Vue.component('selection-area', SelectionArea)
 
@@ -37,15 +50,21 @@ $(document).on "turbolinks:load", ->
     datasheets: {}
     selectedDatasheet: null
     selections : []
+    selectedSelection: null
     currentSelection:
       active: false
+      datasheet: null
       page: null
       canvasWidth: null
       x: 0
       y: 0
       width: 0
       height: 0
+      orientation: "horizontal"
+      headers: false
       position: ""
+      backgroundColor: ""
+      borderColor: ""
 
   # Instanciating Vue
   datasheetCategoriesApp = new Vue({
@@ -135,6 +154,7 @@ $(document).on "turbolinks:load", ->
             console.log("Canvas width :" + pdfViewWidth)
             appData.currentSelection.canvasWidth = parseInt(e.target.style.width.match(/\d+/)[0])
 
+            appData.currentSelection.datasheet = appData.selectedDatasheet
             appData.currentSelection.page = parseInt(e.target.id.match(/\d+/)[0])
             vueInstance.updateActiveSelection(xPos, yPos, 0, 0)
 
@@ -162,6 +182,8 @@ $(document).on "turbolinks:load", ->
           (e) ->
             if appData.currentSelection.active
               appData.currentSelection.active = false
+              appData.currentSelection.backgroundColor = "rgb(255, 0, 0, 0.3)"
+              appData.currentSelection.borderColor = "red"
 
               canvasWrapperSelector = ".page[data-page-number=\"#{appData.currentSelection.page}\"] .canvasWrapper"
               canvasLeftOffset = $("#pdfIframe").contents().find(canvasWrapperSelector).offset().left
@@ -179,32 +201,18 @@ $(document).on "turbolinks:load", ->
               appData.selections.push(
                   selectionDeepCopy(appData.currentSelection)
                 )
-              console.log(appData.selections)
 
-              # viewerLeftOffset = $("#pdfIframe").contents().find("#viewer").offset().left
-              # viewerTopOffset = $("#pdfIframe").contents().find("#viewer").offset().top
-
-              console.log(appData.currentSelection)
-              # $("#pdfIframe").contents().find("#viewer").append(
-              #   '<div style="' + appData.currentSelection.position + 'position:absolute;background-color:rgb(255, 0, 0, 0.3);outline: 4px dashed red; outline-offset:0px"></div>'
-              # )
-              injectSelectionInIframe(appData.currentSelection.page, appData.currentSelection.position)
-              # $("#pdfIframe").contents().find(canvasWrapperSelector).append(
-              #   '<div style="' + appData.currentSelection.position + 'position:absolute;background-color:rgb(255, 0, 0, 0.3);outline: 4px dashed red; outline-offset:0px"></div>'
-              # )
+              injectSelectionInIframe(appData.currentSelection)
           )
 
         $("#pdfIframe").contents().find("#viewer").mousemove(() ->
           $("#pdfIframe").contents().find(".textLayer").hide()
           )
+
         setTimeout(
-          () -> (injectSelectionInIframe(selection.page, selection.position)
+          () -> (injectSelectionInIframe(selection)
           console.log(selection.page)) for selection in appData.selections,
           2000);
-
-
-      selectionSize: (selection) ->
-        selection.width + "x" + selection.height
 
       updateActiveSelection: (x, y, width, height) ->
         this.currentSelection.x = x
@@ -216,6 +224,27 @@ $(document).on "turbolinks:load", ->
           "top:" + y + "px;" + \
           "width:" + width + "px;" + \
           "height:" + height + "px;"
+
+      viewSelection: (selectionToView) ->
+        if this.selectedSelection
+          this.selectedSelection.backgroundColor = "rgb(255, 0, 0, 0.3)"
+          this.selectedSelection.borderColor = "red"
+        this.selectedSelection = selectionToView
+        selectionToView.backgroundColor = "rgb(0, 255, 0, 0.3)"
+        selectionToView.borderColor = "green"
+        # If we are on the right datasheet, the new colors will be loaded
+        removeSelectionFromIframe(selection) for selection in this.selections
+        injectSelectionInIframe(selection) for selection in this.selections
+
+        # If a new datasheet is selected, the selections will be loaded with the right colors
+        this.selectDatasheet(selectionToView.datasheet)
+
+      deleteSelection: (selectionToDelete) ->
+        checkSelection = (selection, i) ->
+          if selection == selectionToDelete
+            appData.selections.splice(i, 1)
+        checkSelection(selection, i) for selection, i in appData.selections
+        removeSelectionFromIframe(selectionToDelete)
 
       extractData: () ->
         selectionsToSend =
@@ -231,6 +260,8 @@ $(document).on "turbolinks:load", ->
             y: selection.y
             width: selection.width
             height: selection.height
+            orientation: selection.orientation
+            headers: selection.headers
           )
         # Fetch parameters
         createSelectionOptions =
@@ -252,8 +283,6 @@ $(document).on "turbolinks:load", ->
           else
             []
           )
-
-
 
     mounted:
       () ->
