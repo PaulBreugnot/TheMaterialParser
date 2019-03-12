@@ -1,6 +1,7 @@
 <div id="results_table" class="table-wrapper-scroll-y">
   <div v-for="material in extractedData">
     <h2> {{ material.name}} </h2>
+    <button type="button" class="btn btn-danger" v-on:click="ignoreMaterial(material)">Ignore</button>
     <table class = "table table-hover">
      <thead>
         <tr>
@@ -27,5 +28,5 @@
   </div>
 </div>
 <h3> {{ resultsCount }} materials found.</h3>
-<button type="button" class="btn btn-success">Save to database</button>
+<button type="button" class="btn btn-success" v-on:click="saveToDatabase()">Save to database</button>
 <button type="button" class="btn btn-success" v-on:click="downloadCsv()">Download .csv</button>

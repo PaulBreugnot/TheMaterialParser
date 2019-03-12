@@ -43,6 +43,8 @@ $(document).on "turbolinks:load", ->
 
   # Vue data definition
   appData =
+    alert: ""
+    notice: ""
     modes: ["Selections", "Extracted Data"]
     currentMode: "Selections" # can be selections or data
     datasheet_selection_id: null
@@ -253,6 +255,8 @@ $(document).on "turbolinks:load", ->
         removeSelectionFromIframe(selectionToDelete)
 
       extractData: () ->
+        this.alert = ""
+        this.notice = ""
         datasheet.status = "waiting" for datasheet, id in appData.datasheets
 
         console.log(this.datasheets)
@@ -301,6 +305,47 @@ $(document).on "turbolinks:load", ->
         link = document.createElement('a');
         link.href = "/datasheet_process/download_csv?datasheet_selection_id=#{this.datasheet_selection_id}";
         link.click();
+
+      saveToDatabase: () ->
+        options =
+          method: "POST"
+
+        fetch("/datasheet_process/save_to_database?datasheet_selection_id=#{this.datasheet_selection_id}", options)
+        .catch((err) ->
+          console.log("Connection error : " + err)
+          appData.alert = "An error occured."
+          throw Error("Connection error")
+          )
+        # Return a JSON promise
+        .then((response) ->
+          if response.ok
+            appData.notice = "#{appData.extractedData.length} materials saved to database."
+            console.log("Save OK")
+          else
+            []
+          )
+
+      ignoreMaterial: (materialToIgnore) ->
+        options =
+          method: "DELETE"
+
+        fetch("/datasheet_process/ignore_material?datasheet_selection_id=#{this.datasheet_selection_id}&material_name=#{materialToIgnore.name}", options)
+        .catch((err) ->
+          console.log("Connection error : " + err)
+          throw Error("Connection error")
+          )
+        # Return a JSON promise
+        .then((response) ->
+          if response.ok
+            checkMaterial = (material, i) ->
+              if material == materialToIgnore
+                appData.extractedData.splice(i, 1)
+            checkMaterial(material, i) for material, i in appData.extractedData
+            console.log("Material ignored")
+          else
+            []
+          )
+
 
     mounted:
       () ->

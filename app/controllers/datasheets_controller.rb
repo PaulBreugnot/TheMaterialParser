@@ -29,7 +29,7 @@ class DatasheetsController < ApplicationController
           if params[:datasheet][:pdfDatasheet].length > 1
             label = "#{params[:datasheet][:pdfDatasheet].length} datasheets"
           else
-            label = "Datasheet #{@datasheet.name}"
+            label = "Datasheet #{added_datasheets[0].name}"
           end
           redirect_to datasheets_url, notice: "#{label} has been uploaded to #{@datasheetCategory.name}."
         else

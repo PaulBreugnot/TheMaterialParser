@@ -93,7 +93,7 @@ class DatasheetProcessController < ApplicationController
 
     @materials = @@waitingResults[params[:datasheet_process][:datasheet_selection_id]]
     respond_to do |format|
-      format.json { render :results }
+      format.json { render :materials }
     end
   end
 
@@ -114,7 +114,13 @@ class DatasheetProcessController < ApplicationController
   end
 
   def save_to_database
-
+    @@waitingResults[params[:datasheet_selection_id]].each do |material|
+      material.save
+    end
   end
 
+  def ignore_material
+    @@waitingResults[params[:datasheet_selection_id]].delete_if { |material| material.name == params[:material_name]}
+  end
+  
 end

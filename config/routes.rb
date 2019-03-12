@@ -16,12 +16,16 @@ Rails.application.routes.draw do
 
   resources :datasheets, only: [:index, :create, :destroy]
 
-  get 'materials/index'
+  resources :materials, only: [:index]
+  get 'materials/download_csv'
+
   get 'about/index'
 
   get 'datasheet_process', to: "datasheet_process#show"
   post 'datasheet_process', to: "datasheet_process#processSelections"
   get 'datasheet_process/download_csv'
+  post 'datasheet_process/save_to_database'
+  delete 'datasheet_process/ignore_material'
 
   root 'datasheets#index'
 end

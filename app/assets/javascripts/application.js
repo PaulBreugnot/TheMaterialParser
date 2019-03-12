@@ -17,6 +17,7 @@
 //= require jquery3
 //= require popper
 //= require bootstrap
-//= require home
+//= require datasheets
 //= require datasheet_categories
+//= require materials
 //= require datasheet_process
