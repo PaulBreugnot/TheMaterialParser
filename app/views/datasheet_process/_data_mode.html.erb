@@ -1,0 +1,31 @@
+<div id="results_table" class="table-wrapper-scroll-y">
+  <div v-for="material in extractedData">
+    <h2> {{ material.name}} </h2>
+    <table class = "table table-hover">
+     <thead>
+        <tr>
+           <th>Component</th>
+           <th>Value</th>
+           <th>Min Value</th>
+           <th>Max Value</th>
+           <th>Balance</th>
+           <th>Residual</th>
+        </tr>
+     </thead>
+
+     <tbody>
+         <tr v-for="component in material.composition">
+          <td> {{ component.name }} </td>
+          <td> {{ component.value }} </td>
+          <td> {{ component.minValue }} </td>
+          <td> {{ component.maxValue }} </td>
+          <td> {{ component.balance }} </td>
+          <td> {{ component.residual }} </td>
+        </tr>
+     </tbody>
+    </table>
+  </div>
+</div>
+<h3> {{ resultsCount }} materials found.</h3>
+<button type="button" class="btn btn-success">Save to database</button>
+<button type="button" class="btn btn-success" v-on:click="downloadCsv()">Download .csv</button>

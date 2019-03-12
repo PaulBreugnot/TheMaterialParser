@@ -1,3 +1,15 @@
+.mode_nav {
+  height: 4%;
+}
+
+.mode_nav span:hover {
+  cursor: pointer;
+}
+
+.mode_container {
+  height: 96%;
+}
+
 #top_row {
   margin: 8px 0px 0px;
   height: 30%;
@@ -21,12 +33,6 @@
   height: 100%;
 }
 
-.table-wrapper-scroll-y {
-  display: block;
-  overflow-y: auto;
-  -ms-overflow-style: -ms-autohiding-scrollbar;
-}
-
 #selection_table {
   margin-top: 5px;
   max-height: 70%;
@@ -35,6 +41,10 @@
 #datasheet_table {
   height: 100%;
   background-color: white;
+}
+
+#results_table {
+  height: 90%;
 }
 
 .selection_area {

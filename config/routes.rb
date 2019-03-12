@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
   get 'datasheet_process', to: "datasheet_process#show"
   post 'datasheet_process', to: "datasheet_process#processSelections"
+  get 'datasheet_process/download_csv'
 
   root 'home#index'
 end

@@ -20,7 +20,11 @@ class Composition < ApplicationRecord
       data = table.by_col
     else
       puts "Processing by row."
-      data = table.by_row
+      if headers
+        data = table.by_row
+      else
+        data = table
+      end
     end
     data.each do |entry|
       puts "entry : #{entry}"

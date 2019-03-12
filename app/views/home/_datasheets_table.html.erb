@@ -12,26 +12,27 @@
   </div>
 </div>
 
-<table class = "table table-hover">
-   <thead>
-      <tr>
-         <th> </th>
-         <th>Name</th>
-         <th>PDF</th>
-         <th>Added</th>
-         <th><input class="form-check-input position-static" type="checkbox" v-on:change="selectAll" v-model="allSelected" aria-label="Select All"></th>
-      </tr>
-   </thead>
+<div id="home_datasheets_table" class="table-wrapper-scroll-y">
+  <table class = "table table-hover">
+     <thead>
+        <tr>
+           <th> </th>
+           <th>Name</th>
+           <th>PDF</th>
+           <th>Added</th>
+           <th><input class="form-check-input position-static" type="checkbox" v-on:change="selectAll" v-model="allSelected" aria-label="Select All"></th>
+        </tr>
+     </thead>
 
-   <tbody>
-     <!-- datasheet items contain the original datasheet as given by the server, and a selected parameter. -->
-         <tr v-if="datasheetItems.length > 0" v-for="datasheetItem in datasheetItems">
-            <td><i class="far fa-file-alt"></i></td>
-            <td> {{datasheetItem.datasheet.name}} </td>
-            <td><a v-bind:href="datasheetItem.datasheet.pdfDatasheet.url" > View PDF </a></td>
-            <td> {{ formatDate(datasheetItem.datasheet.updated_at) }} </td>
-            <td> <input class="form-check-input position-static" type="checkbox" v-model="datasheetItem.selected" aria-label="Select File"> </td>
-         </tr>
-   </tbody>
-
-</table>
+     <tbody>
+       <!-- datasheet items contain the original datasheet as given by the server, and a selected parameter. -->
+           <tr v-if="datasheetItems.length > 0" v-for="datasheetItem in datasheetItems">
+              <td><i class="far fa-file-alt"></i></td>
+              <td> {{datasheetItem.datasheet.name}} </td>
+              <td><a v-bind:href="datasheetItem.datasheet.pdfDatasheet.url" > View PDF </a></td>
+              <td> {{ formatDate(datasheetItem.datasheet.updated_at) }} </td>
+              <td> <input class="form-check-input position-static" type="checkbox" v-model="datasheetItem.selected" aria-label="Select File"> </td>
+           </tr>
+     </tbody>
+  </table>
+</div>

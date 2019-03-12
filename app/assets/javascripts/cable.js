@@ -10,5 +10,4 @@
 
   App.cable = ActionCable.createConsumer();
 
-  console.log("App init ok")
 }).call(this);

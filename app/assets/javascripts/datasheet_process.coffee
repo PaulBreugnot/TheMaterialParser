@@ -3,10 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 SelectionArea = Vue.extend({
-  # template: "<div class=\"selection_area\" v-bind:style=\"{left: xPos + 'px', top: yPos + 'px', width: width +'px', height: height + 'px'}\"></div>"
   template: '<div class="selection_area"></div>'
-  # data: () ->
-  #     selectionPosition: {left: this.x + 'px', top: this.y + 'px', width: this.width + 'px', height: this.height + 'px'}
 })
 
 selectionDeepCopy = (selection) ->
@@ -46,6 +43,8 @@ $(document).on "turbolinks:load", ->
 
   # Vue data definition
   appData =
+    modes: ["Selections", "Extracted Data"]
+    currentMode: "Selections" # can be selections or data
     datasheet_selection_id: null
     datasheets: {}
     selectedDatasheet: null
@@ -65,6 +64,7 @@ $(document).on "turbolinks:load", ->
       position: ""
       backgroundColor: ""
       borderColor: ""
+    extractedData: []
 
   # Instanciating Vue
   datasheetCategoriesApp = new Vue({
@@ -77,6 +77,9 @@ $(document).on "turbolinks:load", ->
         if this.selectedDatasheet
           url = "/pdfjs/minimal?file=" + this.selectedDatasheet.datasheet.pdfDatasheet.url
         url
+
+      resultsCount: () ->
+        this.extractedData.length
 
     methods:
       fetchDatasheets: () ->
@@ -116,6 +119,9 @@ $(document).on "turbolinks:load", ->
                   ) for datasheet in json
               console.log(appData.datasheets)
             )
+
+      switchMode: (mode) ->
+        this.currentMode = mode
 
       setupAppCable: () ->
         App.cable.subscriptions.create { channel: "ProcessChannel", datasheet_selection_id: appData.datasheet_selection_id },
@@ -247,6 +253,9 @@ $(document).on "turbolinks:load", ->
         removeSelectionFromIframe(selectionToDelete)
 
       extractData: () ->
+        datasheet.status = "waiting" for datasheet, id in appData.datasheets
+
+        console.log(this.datasheets)
         selectionsToSend =
           datasheet_process:
             datasheet_selection_id: this.datasheet_selection_id
@@ -283,6 +292,15 @@ $(document).on "turbolinks:load", ->
           else
             []
           )
+        .then((json) ->
+          console.log(json.materials)
+          appData.extractedData = json.materials
+          )
+
+      downloadCsv: () ->
+        link = document.createElement('a');
+        link.href = "/datasheet_process/download_csv?datasheet_selection_id=#{this.datasheet_selection_id}";
+        link.click();
 
     mounted:
       () ->

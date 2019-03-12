@@ -57,3 +57,10 @@ html {
   font-size: 1.2em;
   margin: 0 5px;
 }
+
+/* General purpose table scroll */
+.table-wrapper-scroll-y {
+  display: block;
+  overflow-y: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}

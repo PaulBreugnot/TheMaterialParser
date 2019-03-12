@@ -13,7 +13,7 @@ class Component < ApplicationRecord
   end
 
   def self.isRawValueBalanced?(rawValue)
-    return rawValue[/(Bal)|(bal)/] != nil
+    return rawValue[/(Bal)|(bal)|(Base)|(base)|>|≥/] != nil
   end
 
   def self.isRawValueResidual?(rawValue)

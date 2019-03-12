@@ -26,3 +26,15 @@
   width: 20%;
   margin:auto;
 }
+
+#home_top_container {
+  height: 13%;
+}
+
+#home_datasheets_table_container {
+  height: 87%;
+}
+
+#home_datasheets_table {
+  height: 90%;
+}

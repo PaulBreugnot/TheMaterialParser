@@ -1,17 +1,13 @@
 <div id="process_view" class="tab_body">
 
-  <div id="top_row" class="row">
-    <div class="col">
-      <%= render 'top_control'%>
-    </div>
-  </div>
+  <nav class="mode_nav nav nav-pills nav-justified orange">
+    <span v-for="mode in modes" v-bind:class="['nav-item nav-link', { active: currentMode==mode}]" v-on:click="switchMode(mode)"> {{ mode }}</span>
+  </nav>
 
-  <div id="main_row" class="row">
-    <div id="datasheets_column" class="col-3">
-      <%= render 'datasheets_sidebar'%>
-    </div>
-    <div id="pdf_column" class="col">
-      <%= render 'pdf_view'%>
-    </div>
+  <div class="mode_container" v-if='currentMode=="Selections"'>
+    <%= render 'selection_mode' %>
+  </div>
+  <div v-else class="mode_container">
+    <%= render 'data_mode' %>
   </div>
 </div>
