@@ -7,8 +7,6 @@ Rails.application.routes.draw do
     resources :datasheets, only: [:index]
   end
 
-  get 'home/index'
-
   put 'datasheet_categories', to: "datasheet_categories#update"
   put 'datasheet_categories/logo', to: "datasheet_categories#remove_logo"
 
@@ -25,5 +23,5 @@ Rails.application.routes.draw do
   post 'datasheet_process', to: "datasheet_process#processSelections"
   get 'datasheet_process/download_csv'
 
-  root 'home#index'
+  root 'datasheets#index'
 end

@@ -1,10 +1,10 @@
 <div>
-  <%= form_for @new_datasheet, html: { multipart: true, "@submit": "checkUpload", class: "form-inline"} do |f| %>
+  <%= form_for @newDatasheet, html: { multipart: true, "@submit": "checkUpload", class: "form-inline"} do |f| %>
 
   <div class="form-group column">
     <%= f.select(:datasheet_category_id, nil, { }, {"v-model":"selectedCategory", "v-on:change": "fetchDatasheets", class:"form-control", id:"categories_menu"}) do %>
       <%= options_for_select(
-        @datasheet_categories.collect { |d| [d.name, d.id]}, @datasheet_categories[0].id
+        @datasheetCategories.collect { |d| [d.name, d.id]}, @datasheetCategories[0].id
       )
       %>
     <% end %>
