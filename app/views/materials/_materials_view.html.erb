@@ -1,32 +1,15 @@
 <div class="tab_body" id="materials_view">
-  <div id="materials_table" class="table-wrapper-scroll-y">
-    <div v-for="material in materials">
-      <h2> {{ material.name}} </h2>
-      <table class = "table table-hover">
-       <thead>
-          <tr>
-             <th>Component</th>
-             <th>Value</th>
-             <th>Min Value</th>
-             <th>Max Value</th>
-             <th>Balance</th>
-             <th>Residual</th>
-          </tr>
-       </thead>
-
-       <tbody>
-           <tr v-for="component in material.composition">
-            <td> {{ component.name }} </td>
-            <td> {{ component.value }} </td>
-            <td> {{ component.minValue }} </td>
-            <td> {{ component.maxValue }} </td>
-            <td> {{ component.balance }} </td>
-            <td> {{ component.residual }} </td>
-          </tr>
-       </tbody>
-      </table>
+  <div id="materials_main_row" class="row">
+    <div id="search_sidebar" class="col-3">
+      <%= render 'search_sidebar'%>
+    </div>
+    <div id="materials_column" class="col">
+      <%= render 'materials_table'%>
+      <h3> {{ materialsCount }} materials found.</h3>
+      <button v-if="selectedMaterials.length < materials.length" type="button" class="btn btn-primary" v-on:click="selectAll">Select all</button>
+      <button v-else type="button" class="btn btn-primary" v-on:click="unselectAll">Unselect all</button>
+      <button type="button" class="btn btn-success" v-on:click="downloadCsv()">Download .csv</button>
+      <button type="button" class="btn btn-danger" v-on:click="deleteSelection()">Delete selection</button>
     </div>
   </div>
-  <h3> {{ materialsCount }} materials currently in database.</h3>
-  <button type="button" class="btn btn-success" v-on:click="downloadCsv()">Download .csv</button>
 </div>

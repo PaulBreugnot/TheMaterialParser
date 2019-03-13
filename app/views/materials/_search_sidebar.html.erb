@@ -1,0 +1,19 @@
+<div id="search_options_container" class="table-wrapper-scroll-y">
+  <h3>Name</h3>
+  <input type="text" class="form-control" v-model="searchName">
+  <h3>Categories</h3>
+  <div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" value="unchecked">
+    <label class="form-check-label">none</label>
+  </div>
+  <div v-for="category in availableCategories" class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" v-bind:value="category.id" v-model="selectedCategories">
+    <label class="form-check-label">{{ category.name }}</label>
+  </div>
+  <h3> Components </h3>
+  <div v-for="component in availableComponents" class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" v-bind:value="component.symbol" v-model="selectedComponents">
+    <label class="form-check-label">{{component.name}} ({{ component.symbol }})</label>
+  </div>
+</div>
+<button type="button" class="btn btn-primary" v-on:click="searchMaterials()">Search</button>

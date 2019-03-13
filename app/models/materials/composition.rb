@@ -4,7 +4,7 @@ require 'materials/elements'
 
 class Composition < ApplicationRecord
   belongs_to :material
-  has_many :components
+  has_many :components, dependent: :destroy
 
   def self.parseFromCsv(csv, orientation=:vertical, headers=true)
     composition = Composition.new

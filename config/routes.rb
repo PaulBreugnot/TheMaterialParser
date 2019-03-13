@@ -18,6 +18,10 @@ Rails.application.routes.draw do
 
   resources :materials, only: [:index]
   get 'materials/download_csv'
+  get 'materials/available_components'
+  post 'materials/search'
+  post 'materials/create_selection'
+  delete 'materials/delete_selection/:selection_uuid', to:'materials#delete_selection'
 
   get 'about/index'
 

@@ -1,0 +1,41 @@
+<div id="materials_table" class="table-wrapper-scroll-y">
+  <div v-for="material in materials">
+    <div class="container">
+      <div class="row justify-content-md-center align-items-center">
+        <div class="col-auto">
+          <input type="checkbox" v-bind:value="material.id" v-model="selectedMaterials">
+        </div>
+        <div class="col-auto">
+          <h2> {{ material.name }} </h2>
+        </div>
+        <div class="col-auto">
+          <a v-if="material.original_pdf" v-bind:href="material.original_pdf" target="_blank">View Original PDF</a>
+        </div>
+      </div>
+    </div>
+
+    <table class = "table table-hover">
+     <thead>
+        <tr>
+           <th>Component</th>
+           <th>Value</th>
+           <th>Min Value</th>
+           <th>Max Value</th>
+           <th>Balance</th>
+           <th>Residual</th>
+        </tr>
+     </thead>
+
+     <tbody>
+         <tr v-for="component in material.composition">
+          <td> {{ component.name }} </td>
+          <td> {{ component.value }} </td>
+          <td> {{ component.minValue }} </td>
+          <td> {{ component.maxValue }} </td>
+          <td> {{ component.balance }} </td>
+          <td> {{ component.residual }} </td>
+        </tr>
+     </tbody>
+    </table>
+  </div>
+</div>

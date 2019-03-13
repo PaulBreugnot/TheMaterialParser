@@ -1,3 +1,24 @@
 #materials_table {
   height: 90%;
 }
+
+#search_form {
+  display: inline-flex;
+}
+
+#materials_main_row {
+  margin: 0px;
+  height: 100%;
+}
+
+#search_sidebar {
+  padding: 10px;
+}
+
+#search_options_container {
+  height: 95%;
+}
+
+.material_name_container {
+  display: inline-block;
+}

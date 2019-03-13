@@ -19,6 +19,10 @@ class AvailablePeriodicElements
     @@table
   end
 
+  def AvailablePeriodicElements.availableElementsBySymbols
+    return @@symbol_name_hash
+  end
+
   def AvailablePeriodicElements.checkElement(element)
     return @@name_symbol_hash[element] != nil || @@symbol_name_hash[element] != nil
   end
