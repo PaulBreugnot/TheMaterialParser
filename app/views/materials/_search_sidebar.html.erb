@@ -1,7 +1,15 @@
 <div id="search_options_container" class="table-wrapper-scroll-y">
   <h3>Name</h3>
   <input type="text" class="form-control" v-model="searchName">
-  <h3>Categories</h3>
+  <div class="row justify-content-md-center align-items-center">
+    <div class="col-auto">
+      <h3>Categories</h3>
+    </div>
+    <div class="col-auto">
+      <input type="checkbox" v-model="allCategoriesSelected" v-on:change="selectAllCategories()"></input>
+    </div>
+  </div>
+
   <div class="form-check form-check-inline">
     <input class="form-check-input" type="checkbox" value="unchecked">
     <label class="form-check-label">none</label>
@@ -10,7 +18,15 @@
     <input class="form-check-input" type="checkbox" v-bind:value="category.id" v-model="selectedCategories">
     <label class="form-check-label">{{ category.name }}</label>
   </div>
-  <h3> Components </h3>
+  <div class="row justify-content-md-center align-items-center">
+    <div class="col-auto">
+      <h3> Components </h3>
+    </div>
+    <div class="col-auto">
+      <input type="checkbox" v-model="allComponentsSelected" v-on:change="selectAllComponents()"></input>
+    </div>
+  </div>
+
   <div v-for="component in availableComponents" class="form-check form-check-inline">
     <input class="form-check-input" type="checkbox" v-bind:value="component.symbol" v-model="selectedComponents">
     <label class="form-check-label">{{component.name}} ({{ component.symbol }})</label>

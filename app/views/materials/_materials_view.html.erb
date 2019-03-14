@@ -6,8 +6,8 @@
     <div id="materials_column" class="col">
       <%= render 'materials_table'%>
       <h3> {{ materialsCount }} materials found.</h3>
-      <button v-if="selectedMaterials.length < materials.length" type="button" class="btn btn-primary" v-on:click="selectAll">Select all</button>
-      <button v-else type="button" class="btn btn-primary" v-on:click="unselectAll">Unselect all</button>
+      <button v-if="selectedMaterials.length < materials.length" type="button" class="btn btn-primary" v-on:click="selectAllMaterials">Select all</button>
+      <button v-else type="button" class="btn btn-primary" v-on:click="unselectAllMaterials">Unselect all</button>
       <button type="button" class="btn btn-success" v-on:click="downloadCsv()">Download .csv</button>
       <button type="button" class="btn btn-danger" v-on:click="deleteSelection()">Delete selection</button>
     </div>

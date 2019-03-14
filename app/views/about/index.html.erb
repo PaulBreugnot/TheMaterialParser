@@ -1,1 +1,47 @@
 <%= render 'navbar'%>
+
+<div class="tab_body">
+  <p class="about">
+    <i>The Material Parser</i> is a project that has been led in the context of
+    a research project at the <a href="https://www.mines-stetienne.fr/en/">Ecole Des Mines de Saint-Etienne</a>,
+    among the SMS research group.
+  </p>
+  <p class="about">
+    Its original motivation is the fact that material manufacturers worldwide usually
+    provide datasheets for their material products as unstandardized PDF datasheets.
+    However, being able to gather and unify those data from different sources to
+    be able to input them, for example, in statistical processes can be very
+    important in the context of real experiments, because they are products that
+    can be bought directly to providers.
+  </p>
+  <p class="about">
+    Extract empirical material information from PDF publications and books can also
+    be interesting.
+  </p>
+  <p class="about">
+    <i>The Material Parser</i> allows you to :
+  </p>
+  <ul class="about">
+    <li>Create and manage some <a href="/datasheet_categories">document categories</a>.</li>
+    <li>Upload your <a href="/datasheets">PDF datasheets</a> (or other documents) in those categories.</li>
+    <li>Apply our process to document subsets in order to extract <b>material compositions</b>.</li>
+    <li>Download results as .csv, or save them to a relationnal database.
+      Notice that whatever the source or the original format, the extracted data
+      will finally be represented using a unique model.</li>
+    <li>Consult <a href="/materials">results saved to the database</a> and apply to them basic filtering
+      before download them as csv.</li>
+  </ul>
+  <p class="about">
+    Our process is based directly on the <a href="https://tabula.technology/">Tabula project</a>,
+    and more precisely its <a href="https://github.com/tabulapdf/tabula-java">tabula-java</a> core.
+    Basically, you can perform several selections on any number of selected datasheets.
+    The algorithm then tries to extract potential composition tables from all the
+    datasheets with all the selections using Tabula. A composition is finally considered as
+    valid if it is composed of valid elements from the periodic table. For now,
+    only english element names (and official symbols) are supported.
+  </p>
+  <a id="github" role="button" class="btn btn-primary"><i class="fab fa-github"></i>View on GitHub</a>
+  <p id="license">
+    © 2019 Paul Breugnot. Available under MIT License.
+  </p>
+</div>

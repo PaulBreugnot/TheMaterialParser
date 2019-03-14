@@ -1,0 +1,23 @@
+.about {
+  width: 90%;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.2em;
+  text-align: justify;
+}
+
+.about li {
+  text-align: start;
+}
+
+#license {
+  position:absolute;
+  width:80%;
+  text-align:center;
+  bottom:10px;
+}
+
+#github {
+  margin-top:50px;
+}

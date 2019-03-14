@@ -8,8 +8,10 @@ $(document).on "turbolinks:load", ->
     selectedMaterials: []
     availableCategories: []
     selectedCategories: []
+    allCategoriesSelected: true
     availableComponents: []
     selectedComponents: []
+    allComponentsSelected: true
     searchName: ""
 
   # Instanciating Vue
@@ -109,6 +111,9 @@ $(document).on "turbolinks:load", ->
             appData.availableComponents.push(
                 component
                 ) for component in json.periodic_elements
+            appData.selectedComponents.push(
+                component.symbol
+                ) for component in json.periodic_elements
           )
 
       searchMaterials: () ->
@@ -145,12 +150,26 @@ $(document).on "turbolinks:load", ->
                 ) for material in json.materials
           )
 
-      selectAll: () ->
+      selectAllMaterials: () ->
         this.selectedMaterials = []
         this.selectedMaterials.push(material.id) for material in this.materials
 
-      unselectAll: () ->
+      unselectAllMaterials: () ->
         this.selectedMaterials.splice(0, this.selectedMaterials.length)
+
+      selectAllCategories: () ->
+        if this.allCategoriesSelected
+          this.selectedCategories = []
+          this.selectedCategories.push(category.id) for category in this.availableCategories
+        else
+          this.selectedCategories.splice(0, this.selectedCategories.length)
+
+      selectAllComponents: () ->
+        if this.allComponentsSelected
+          this.selectedComponents = []
+          this.selectedComponents.push(component.symbol) for component in this.availableComponents
+        else
+          this.selectedComponents.splice(0, this.selectedComponents.length)
 
       downloadCsv: () ->
         link = document.createElement('a');
@@ -200,12 +219,20 @@ $(document).on "turbolinks:load", ->
             # Return a JSON promise
             .then((response) ->
               if response.ok
-                deleteMaterial = (selectedMaterial) ->
+                materialsClone = []
+                materialsClone.push(material) for material in appData.materials
+                appData.materials = []
+
+                checkMaterial = (material) ->
+                  inSelectedMaterials = false
                   (if (selectedMaterial == material.id)
-                    appData.materials.splice(i, 1)
-                    ) for material, i in appData.materials
-                deleteMaterial(selectedMaterial) for selectedMaterial in appData.selectedMaterials
-                )
+                    inSelectedMaterials = true
+                    ) for selectedMaterial in appData.selectedMaterials
+                  if !inSelectedMaterials
+                    appData.materials.push(material)
+
+                checkMaterial(material) for material in materialsClone
+              )
           )
 
     mounted:

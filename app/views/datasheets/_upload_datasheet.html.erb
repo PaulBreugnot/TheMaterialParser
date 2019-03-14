@@ -3,10 +3,12 @@
 
   <div class="form-group column">
     <%= f.select(:datasheet_category_id, nil, { }, {"v-model":"selectedCategory", "v-on:change": "fetchDatasheets", class:"form-control", id:"categories_menu"}) do %>
-      <%= options_for_select(
-        @datasheetCategories.collect { |d| [d.name, d.id]}, @datasheetCategories[0].id
-      )
-      %>
+      <% if @datasheetCategories.size > 0 %>
+        <%= options_for_select(
+          @datasheetCategories.collect { |d| [d.name, d.id]}, @datasheetCategories[0].id
+        )
+        %>
+      <% end %>
     <% end %>
   </div>
 

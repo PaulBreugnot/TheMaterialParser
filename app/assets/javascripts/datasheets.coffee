@@ -9,7 +9,8 @@ $(document).on "turbolinks:load", ->
   appData =
     notice: null # Notice message on success from client side
     alert: null # Alert message in case of trouble from client side
-    datasheetItems: [] # { datasheet: fetched_datasheet, selected: is_the_datasheet_selected?}
+    datasheets: [] # { datasheet: fetched_datasheet, selected: is_the_datasheet_selected?}
+    selectedDatasheets: []
     allSelected: null # Global selection checkbox status
     selectedCategory: Cookies.get('selectedCategory') # Id of the selected category ("select" box)
     fileName: "No file selected."
@@ -51,7 +52,7 @@ $(document).on "turbolinks:load", ->
         this.notice = null
         this.alert = null
         # Clear datasheet items list
-        this.datasheetItems = []
+        this.datasheets = []
         # Fetch parameters
         this.datasheetsUrl = "/datasheet_categories/" + this.selectedCategory + "/datasheets"
         options =
@@ -76,40 +77,46 @@ $(document).on "turbolinks:load", ->
         # Process the JSON response
         .then((json) ->
             # Add received datasheets to our appData
-            appData.datasheetItems.push(
-                datasheet: datasheet
-                selected: false
+            appData.datasheets.push(
+                datasheet
                 ) for datasheet in json
           )
 
       # Called on global checkbox action
       selectAll: () ->
-        datasheetItem.selected = this.allSelected for datasheetItem in this.datasheetItems
+        if this.allSelected
+          this.selectedDatasheets = []
+          this.selectedDatasheets.push(datasheet.id) for datasheet in this.datasheets
+        else
+          this.selectedDatasheets.splice(0, this.selectedDatasheets.length)
 
       # Delete selected datasheets
       deleteSelection: () ->
-        # ids of datasheets to delete
-        datasheet_ids = []
         # Fetch parameters
         createSelectionOptions =
           method: "POST"
           headers:
             "Content-Type": "application/json"
             "Accept": "application/json"
-        # Find selected datasheets
-        datasheet_ids.push(datasheetItem.datasheet.id) \
-          for datasheetItem in this.datasheetItems \
-            when datasheetItem.selected
-        # Set request body
-        createSelectionOptions.body = JSON.stringify(
+          body: JSON.stringify(
             datasheet_category_id: this.selectedCategory
             selection_type: "delete"
-            datasheet_ids: datasheet_ids
-            )
+            datasheet_ids: this.selectedDatasheets
+          )
+        # # Find selected datasheets
+        # datasheet_ids.push(datasheetItem.datasheet.id) \
+        #   for datasheetItem in this.datasheetItems \
+        #     when datasheetItem.selected
+        # # Set request body
+        # createSelectionOptions.body = JSON.stringify(
+        #     datasheet_category_id: this.selectedCategory
+        #     selection_type: "delete"
+        #     datasheet_ids: datasheet_ids
+        #     )
 
-        if datasheet_ids.length > 0
+        if this.selectedDatasheets.length > 0
           if confirm("Do you really want to delete selection?")
-            console.log("Create selection : " + datasheet_ids)
+            console.log("Create selection : " + this.selectedDatasheets)
             # Firstly, we create a selection that contains the datasheets to be deleted
             fetch("/datasheet_selections", createSelectionOptions)
             .catch((err) ->
@@ -148,10 +155,9 @@ $(document).on "turbolinks:load", ->
               .then((json) ->
                 console.log("Selection deleted.")
                 # The server returns the updated datasheets list for this category
-                appData.datasheetItems = []
-                appData.datasheetItems.push(
-                  datasheet: datasheet
-                  selected: false
+                appData.datasheets = []
+                appData.datasheets.push(
+                  datasheet
                 ) for datasheet in json
                 # Uncheck allselected in case it was
                 appData.allSelected = false
@@ -165,26 +171,30 @@ $(document).on "turbolinks:load", ->
               )
 
       processSelection: () ->
-        # ids of datasheets to process
-        datasheet_ids = []
         # Fetch parameters
         createSelectionOptions =
           method: "POST"
           headers:
             "Content-Type": "application/json"
             "Accept": "application/json"
-        # Find selected datasheets
-        datasheet_ids.push(datasheetItem.datasheet.id) \
-          for datasheetItem in this.datasheetItems \
-            when datasheetItem.selected
-        # Set request body
-        createSelectionOptions.body = JSON.stringify(
-            datasheet_category_id: this.selectedCategory
-            selection_type: "process"
-            datasheet_ids: datasheet_ids
-            )
+          body:
+            JSON.stringify(
+              datasheet_category_id: this.selectedCategory
+              selection_type: "process"
+              datasheet_ids: this.selectedDatasheets
+              )
+        # # Find selected datasheets
+        # datasheet_ids.push(datasheetItem.datasheet.id) \
+        #   for datasheetItem in this.datasheetItems \
+        #     when datasheetItem.selected
+        # # Set request body
+        # createSelectionOptions.body = JSON.stringify(
+        #     datasheet_category_id: this.selectedCategory
+        #     selection_type: "process"
+        #     datasheet_ids: datasheet_ids
+        #     )
 
-        console.log("Create selection : " + datasheet_ids)
+        console.log("Create selection : " + this.selectedDatasheets)
         # Firstly, we create a selection that contains the datasheets to be deleted
         fetch("/datasheet_selections", createSelectionOptions)
         .catch((err) ->
