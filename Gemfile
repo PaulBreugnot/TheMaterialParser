@@ -42,8 +42,11 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'carrierwave', '~> 1.0'
 
 # Bootstrap
-gem 'bootstrap', ">= 4.3.1"
+# gem 'bootstrap', ">= 4.3.1"
 gem 'jquery-rails'
 
 # PDF.js
 gem 'pdfjs_viewer-rails'
+
+gem 'jruby-jars', '9.2.5.0'
+gem 'warbler'

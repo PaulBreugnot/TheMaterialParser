@@ -1,0 +1,27 @@
+<?xml version="1.0"  encoding="ISO-8859-1"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.eclipse.org/configure.dtd">
+
+<!-- <Configure id="Server" class="org.eclipse.jetty.server.handler.ContextHandler">
+<Set name="contextPath">/testparvez</Set>
+<Set name="resourceBase"><SystemProperty name="mydir"/></Set>
+<Set name="handler">
+<New class="org.eclipse.jetty.server.handler.ResourceHandler">
+  <Set name="localStorage">
+    <Array type="String">
+      <Item><SystemProperty name="myfile"/></Item>
+    </Array>
+  </Set>
+  <Set name="cacheControl">max-age=3600,public</Set>
+</New>
+</Set>
+</Configure> -->
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+
+  <Set name="contextPath">/</Set>
+  <Set name="war">TheMaterialParser.war</Set>
+
+  <Set name="tempDirectory">.</Set>
+
+  <Set name="persistTempDirectory" type="boolean">true</Set>
+
+</Configure>

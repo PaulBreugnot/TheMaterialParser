@@ -15,8 +15,6 @@
 //= require activestorage
 //= require turbolinks
 //= require jquery3
-//= require popper
-//= require bootstrap
 //= require datasheets
 //= require datasheet_categories
 //= require materials

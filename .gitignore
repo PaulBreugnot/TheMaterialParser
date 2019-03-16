@@ -30,3 +30,4 @@
 
 # Ignore database
 /db/*.sqlite3
+/release/test
