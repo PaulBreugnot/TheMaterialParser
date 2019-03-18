@@ -131,11 +131,11 @@ $(document).on "turbolinks:load", ->
       switchMode: (mode) ->
         this.currentMode = mode
 
-      # setupAppCable: () ->
-      #   App.cable.subscriptions.create { channel: "ProcessChannel", datasheet_selection_id: appData.datasheet_selection_id },
-      #     received: (data) ->
-      #       console.log(data)
-      #       appData.datasheets[data['datasheet_id']].status = data['status']
+      setupAppCable: () ->
+        App.cable.subscriptions.create { channel: "ProcessChannel", datasheet_selection_id: appData.datasheet_selection_id },
+          received: (data) ->
+            console.log(data)
+            appData.datasheets[data['datasheet_id']].status = data['status']
 
       selectDatasheet: (datasheet) ->
         if this.selectedDatasheet
@@ -305,7 +305,7 @@ $(document).on "turbolinks:load", ->
         .then((json) ->
           console.log(json)
           appData.extractedData = json.materials
-          appData.datasheets[datasheetStatus.datasheet_id].status = datasheetStatus.status for datasheetStatus in json.datasheet_status
+          # appData.datasheets[datasheetStatus.datasheet_id].status = datasheetStatus.status for datasheetStatus in json.datasheet_status
           )
 
       downloadCsv: () ->
@@ -357,5 +357,5 @@ $(document).on "turbolinks:load", ->
     mounted:
       () ->
         this.fetchDatasheets()
-        # this.setupAppCable()
+        this.setupAppCable()
   })
