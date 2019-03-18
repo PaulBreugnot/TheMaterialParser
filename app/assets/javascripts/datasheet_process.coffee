@@ -41,7 +41,7 @@ Vue.component('selection-area', SelectionArea)
 $(document).on "turbolinks:load", ->
   return unless $("#process_view").length > 0
 
-  root = window.location.href.replace("/datasheet_process", "")
+  root = window.location.href.replace(/\/datasheet_process\/\?selection_id=\d/gi, "")
 
   # Vue data definition
   appData =
@@ -77,10 +77,9 @@ $(document).on "turbolinks:load", ->
 
     computed:
       pdfjsUrl: () ->
-        url = ""
         if this.selectedDatasheet
-          url = root + "/pdfjs/minimal?file=" + this.selectedDatasheet.datasheet.pdfDatasheet.url
-        url
+          return root + "/pdfjs/minimal?file=" + this.selectedDatasheet.datasheet.pdfDatasheet.url
+        return root + "/pdfjs/minimal?file=undefined"
 
       resultsCount: () ->
         this.extractedData.length
@@ -98,6 +97,7 @@ $(document).on "turbolinks:load", ->
             headers:
               "Accept": "application/json"
 
+          vueInstance = this
           console.log("Fetching datasheets from : " + this.datasheetsUrl)
           fetch(this.datasheetsUrl, options)
           .catch((err) ->
@@ -122,16 +122,20 @@ $(document).on "turbolinks:load", ->
                   selected: false
                   ) for datasheet in json
               console.log(appData.datasheets)
+              if Object.keys(appData.datasheets).length > 0
+                console.log(Object.keys(appData.datasheets)[0])
+                console.log(appData.datasheets[Object.keys(appData.datasheets)[0]])
+                vueInstance.selectDatasheet(appData.datasheets[Object.keys(appData.datasheets)[0]])
             )
 
       switchMode: (mode) ->
         this.currentMode = mode
 
-      setupAppCable: () ->
-        App.cable.subscriptions.create { channel: "ProcessChannel", datasheet_selection_id: appData.datasheet_selection_id },
-          received: (data) ->
-            console.log(data)
-            appData.datasheets[data['datasheet_id']].status = data['status']
+      # setupAppCable: () ->
+      #   App.cable.subscriptions.create { channel: "ProcessChannel", datasheet_selection_id: appData.datasheet_selection_id },
+      #     received: (data) ->
+      #       console.log(data)
+      #       appData.datasheets[data['datasheet_id']].status = data['status']
 
       selectDatasheet: (datasheet) ->
         if this.selectedDatasheet
@@ -299,8 +303,9 @@ $(document).on "turbolinks:load", ->
             []
           )
         .then((json) ->
-          console.log(json.materials)
+          console.log(json)
           appData.extractedData = json.materials
+          appData.datasheets[datasheetStatus.datasheet_id].status = datasheetStatus.status for datasheetStatus in json.datasheet_status
           )
 
       downloadCsv: () ->
@@ -352,5 +357,5 @@ $(document).on "turbolinks:load", ->
     mounted:
       () ->
         this.fetchDatasheets()
-        this.setupAppCable()
+        # this.setupAppCable()
   })

@@ -1,6 +1,6 @@
 
 json.materials @materials do |material|
-  if material.id 
+  if material.id
     json.id material.id
   end
   json.name material.name
@@ -14,5 +14,12 @@ json.materials @materials do |material|
     json.maxValue component.maxValue
     json.balance component.balance
     json.residual component.residual
+  end
+end
+
+if @datasheetStatus
+  json.datasheet_status @datasheetStatus.each do |datasheet_id, datasheetStatus|
+    json.datasheet_id datasheet_id
+    json.status datasheetStatus
   end
 end

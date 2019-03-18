@@ -18,6 +18,7 @@ class DatasheetProcessController < ApplicationController
 
     datasheet_selection = DatasheetSelection.find(params[:datasheet_process][:datasheet_selection_id])
     @@waitingResults[params[:datasheet_process][:datasheet_selection_id]] = []
+    @datasheetStatus = {}
 
     datasheet_selection.datasheets.each do |datasheet|
 
@@ -73,18 +74,20 @@ class DatasheetProcessController < ApplicationController
         # material.composition = Composition.parseFromCsv(csv, orientation=selection[:orientation].to_sym, headers=selection[:headers])
       end
       if material.composition
-        ActionCable.server.broadcast(
-          "process_#{params[:datasheet_process][:datasheet_selection_id]}",
-          datasheet_id: datasheet.id,
-          status: 'ok',
-        )
+        # ActionCable.server.broadcast(
+        #   "process_#{params[:datasheet_process][:datasheet_selection_id]}",
+        #   datasheet_id: datasheet.id,
+        #   status: 'ok',
+        # )
+        @datasheetStatus[datasheet.id] = "ok"
         @@waitingResults[params[:datasheet_process][:datasheet_selection_id]].push(material)
       else
-        ActionCable.server.broadcast(
-          "process_#{params[:datasheet_process][:datasheet_selection_id]}",
-          datasheet_id: datasheet.id,
-          status: 'warning',
-        )
+        # ActionCable.server.broadcast(
+        #   "process_#{params[:datasheet_process][:datasheet_selection_id]}",
+        #   datasheet_id: datasheet.id,
+        #   status: 'warning',
+        # )
+        @datasheetStatus[datasheet.id] = "warning"
       end
     #  end
     end
@@ -122,5 +125,5 @@ class DatasheetProcessController < ApplicationController
   def ignore_material
     @@waitingResults[params[:datasheet_selection_id]].delete_if { |material| material.name == params[:material_name]}
   end
-  
+
 end

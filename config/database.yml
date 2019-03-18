@@ -21,4 +21,4 @@ test:
 
 production:
   <<: *default
-  database: <%= java.lang.System.getProperty('db') ||= ENV["MATERIAL_PARSER_DB"] %>
+  database: <%= ENV["MATERIAL_PARSER_DB"] %>
