@@ -5,6 +5,9 @@
 $(document).on "turbolinks:load", ->
   return unless $("#datasheets_view").length > 0
 
+  root = window.location.href.replace("/datasheets", "")
+
+  console.log("Application root : #{root}")
   # Vue data definition
   appData =
     notice: null # Notice message on success from client side
@@ -22,6 +25,9 @@ $(document).on "turbolinks:load", ->
     data: appData
 
     methods:
+      datasheetUrl: (datasheet) ->
+        console.log(datasheet)
+        root + datasheet.pdfDatasheet.url
       # Called on submit datasheet form action
       checkUpload : (e) ->
         valid = false
@@ -54,7 +60,7 @@ $(document).on "turbolinks:load", ->
         # Clear datasheet items list
         this.datasheets = []
         # Fetch parameters
-        this.datasheetsUrl = "/datasheet_categories/" + this.selectedCategory + "/datasheets"
+        this.datasheetsUrl = root + "/datasheet_categories/" + this.selectedCategory + "/datasheets"
         options =
           method: "GET"
           headers:
@@ -103,22 +109,12 @@ $(document).on "turbolinks:load", ->
             selection_type: "delete"
             datasheet_ids: this.selectedDatasheets
           )
-        # # Find selected datasheets
-        # datasheet_ids.push(datasheetItem.datasheet.id) \
-        #   for datasheetItem in this.datasheetItems \
-        #     when datasheetItem.selected
-        # # Set request body
-        # createSelectionOptions.body = JSON.stringify(
-        #     datasheet_category_id: this.selectedCategory
-        #     selection_type: "delete"
-        #     datasheet_ids: datasheet_ids
-        #     )
 
         if this.selectedDatasheets.length > 0
           if confirm("Do you really want to delete selection?")
             console.log("Create selection : " + this.selectedDatasheets)
             # Firstly, we create a selection that contains the datasheets to be deleted
-            fetch("/datasheet_selections", createSelectionOptions)
+            fetch(root + "/datasheet_selections", createSelectionOptions)
             .catch((err) ->
               console.log("Connection error : " + err)
               appData.alert = "Connection error : " + err
@@ -140,7 +136,7 @@ $(document).on "turbolinks:load", ->
                   "Accept": "application/json"
 
               # Delete selection and its datasheets
-              fetch("/datasheet_selections/" + json.id, deleteSelectionOptions)
+              fetch(root + "/datasheet_selections/" + json.id, deleteSelectionOptions)
               .catch((err) ->
                 console.log("Connection error : " + err)
                 appData.alert = "Connection error : " + err
@@ -163,8 +159,8 @@ $(document).on "turbolinks:load", ->
                 appData.allSelected = false
                 # Notice success
                 appData.alert = null
-                if datasheet_ids.length > 1
-                  appData.notice = datasheet_ids.length + " datasheets deleted."
+                if appData.selectedDatasheets.length > 1
+                  appData.notice = appData.selectedDatasheets.length + " datasheets deleted."
                 else
                   appData.notice = "1 datasheet deleted."
                 )
@@ -183,20 +179,10 @@ $(document).on "turbolinks:load", ->
               selection_type: "process"
               datasheet_ids: this.selectedDatasheets
               )
-        # # Find selected datasheets
-        # datasheet_ids.push(datasheetItem.datasheet.id) \
-        #   for datasheetItem in this.datasheetItems \
-        #     when datasheetItem.selected
-        # # Set request body
-        # createSelectionOptions.body = JSON.stringify(
-        #     datasheet_category_id: this.selectedCategory
-        #     selection_type: "process"
-        #     datasheet_ids: datasheet_ids
-        #     )
 
         console.log("Create selection : " + this.selectedDatasheets)
         # Firstly, we create a selection that contains the datasheets to be deleted
-        fetch("/datasheet_selections", createSelectionOptions)
+        fetch(root + "/datasheet_selections", createSelectionOptions)
         .catch((err) ->
           console.log("Connection error : " + err)
           appData.alert = "Connection error : " + err
@@ -210,7 +196,7 @@ $(document).on "turbolinks:load", ->
             []
           )
         .then((json) ->
-          window.location.href = "/datasheet_process/?selection_id=" + json.id
+          window.location.href = root + "/datasheet_process/?selection_id=" + json.id
           )
 
       # Used to print dates in the table

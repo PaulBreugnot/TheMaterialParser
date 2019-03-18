@@ -41,6 +41,8 @@ Vue.component('selection-area', SelectionArea)
 $(document).on "turbolinks:load", ->
   return unless $("#process_view").length > 0
 
+  root = window.location.href.replace("/datasheet_process", "")
+
   # Vue data definition
   appData =
     alert: ""
@@ -77,7 +79,7 @@ $(document).on "turbolinks:load", ->
       pdfjsUrl: () ->
         url = ""
         if this.selectedDatasheet
-          url = "/pdfjs/minimal?file=" + this.selectedDatasheet.datasheet.pdfDatasheet.url
+          url = root + "/pdfjs/minimal?file=" + this.selectedDatasheet.datasheet.pdfDatasheet.url
         url
 
       resultsCount: () ->
@@ -90,7 +92,7 @@ $(document).on "turbolinks:load", ->
           console.log(this.datasheet_selection_id)
 
           # Fetch parameters
-          this.datasheetsUrl = "/datasheet_selections/" + this.datasheet_selection_id
+          this.datasheetsUrl = root + "/datasheet_selections/" + this.datasheet_selection_id
           options =
             method: "GET"
             headers:
@@ -284,7 +286,7 @@ $(document).on "turbolinks:load", ->
             "Accept": "application/json"
           body: JSON.stringify(selectionsToSend)
 
-        fetch("/datasheet_process", createSelectionOptions)
+        fetch(root + "/datasheet_process", createSelectionOptions)
         .catch((err) ->
           console.log("Connection error : " + err)
           throw Error("Connection error")
@@ -303,14 +305,14 @@ $(document).on "turbolinks:load", ->
 
       downloadCsv: () ->
         link = document.createElement('a');
-        link.href = "/datasheet_process/download_csv?datasheet_selection_id=#{this.datasheet_selection_id}";
+        link.href = root + "/datasheet_process/download_csv?datasheet_selection_id=#{this.datasheet_selection_id}";
         link.click();
 
       saveToDatabase: () ->
         options =
           method: "POST"
 
-        fetch("/datasheet_process/save_to_database?datasheet_selection_id=#{this.datasheet_selection_id}", options)
+        fetch(root + "/datasheet_process/save_to_database?datasheet_selection_id=#{this.datasheet_selection_id}", options)
         .catch((err) ->
           console.log("Connection error : " + err)
           appData.alert = "An error occured."
@@ -329,7 +331,7 @@ $(document).on "turbolinks:load", ->
         options =
           method: "DELETE"
 
-        fetch("/datasheet_process/ignore_material?datasheet_selection_id=#{this.datasheet_selection_id}&material_name=#{materialToIgnore.name}", options)
+        fetch(root + "/datasheet_process/ignore_material?datasheet_selection_id=#{this.datasheet_selection_id}&material_name=#{materialToIgnore.name}", options)
         .catch((err) ->
           console.log("Connection error : " + err)
           throw Error("Connection error")

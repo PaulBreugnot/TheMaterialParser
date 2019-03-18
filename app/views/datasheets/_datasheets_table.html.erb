@@ -28,7 +28,7 @@
            <tr v-for="datasheet in datasheets">
               <td><i class="far fa-file-alt"></i></td>
               <td> {{datasheet.name}} </td>
-              <td><a v-bind:href="datasheet.pdfDatasheet.url" > View PDF </a></td>
+              <td><a v-bind:href="datasheetUrl(datasheet)" target="_blank" > View PDF </a></td>
               <td> {{ formatDate(datasheet.updated_at) }} </td>
               <td> <input class="form-check-input position-static" type="checkbox" v-bind:value="datasheet.id" v-model="selectedDatasheets" aria-label="Select Datasheet"> </td>
            </tr>

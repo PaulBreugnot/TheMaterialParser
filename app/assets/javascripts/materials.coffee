@@ -2,6 +2,8 @@
 $(document).on "turbolinks:load", ->
   return unless $("#materials_view").length > 0
 
+  root = window.location.href.replace("/materials", "")
+
   # Vue data definition
   appData =
     materials: []
@@ -33,7 +35,7 @@ $(document).on "turbolinks:load", ->
           headers:
             "Accept": "application/json"
 
-        fetch("/materials", options)
+        fetch(root + "/materials", options)
         .catch((err) ->
           console.log("Connection error : " + err)
           throw Error("Connection error")
@@ -63,7 +65,7 @@ $(document).on "turbolinks:load", ->
           headers:
             "Accept": "application/json"
 
-        fetch("/datasheet_categories", options)
+        fetch(root + "/datasheet_categories", options)
         .catch((err) ->
           console.log("Connection error : " + err)
           throw Error("Connection error")
@@ -93,7 +95,7 @@ $(document).on "turbolinks:load", ->
           headers:
             "Accept": "application/json"
 
-        fetch("/materials/available_components", options)
+        fetch(root + "/materials/available_components", options)
         .catch((err) ->
           console.log("Connection error : " + err)
           throw Error("Connection error")
@@ -130,7 +132,7 @@ $(document).on "turbolinks:load", ->
             components: this.selectedComponents
           )
 
-        fetch("/materials/search", options)
+        fetch(root + "/materials/search", options)
         .catch((err) ->
           console.log("Connection error : " + err)
           throw Error("Connection error")
@@ -173,7 +175,7 @@ $(document).on "turbolinks:load", ->
 
       downloadCsv: () ->
         link = document.createElement('a');
-        link.href = "/materials/download_csv";
+        link.href = root + "/materials/download_csv";
         link.click();
 
       deleteSelection: () ->
@@ -188,7 +190,7 @@ $(document).on "turbolinks:load", ->
           )
 
         console.log(options)
-        fetch("/materials/create_selection", options)
+        fetch(root + "/materials/create_selection", options)
         .catch((err) ->
           console.log("Connection error : " + err)
           throw Error("Connection error")
@@ -211,7 +213,7 @@ $(document).on "turbolinks:load", ->
               headers:
                 "Content-Type": "application/json"
 
-            fetch("/materials/delete_selection/#{uuid}", options)
+            fetch(root + "/materials/delete_selection/#{uuid}", options)
             .catch((err) ->
               console.log("Connection error : " + err)
               throw Error("Connection error")

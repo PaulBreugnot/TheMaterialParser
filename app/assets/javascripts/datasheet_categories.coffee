@@ -5,6 +5,8 @@
 $(document).on "turbolinks:load", ->
   return unless $("#categories_view").length > 0
 
+  root = window.location.href.replace("/datasheet_categories", "")
+
   # Vue data definition
   appData =
     notice: null # Notice message on success from client side
@@ -34,7 +36,7 @@ $(document).on "turbolinks:load", ->
             "Accept": "application/json"
 
         console.log("Fetching categories")
-        fetch("/datasheet_categories", options)
+        fetch(root + "/datasheet_categories", options)
         .catch((err) ->
           console.log("Connection error : " + err)
           appData.alert = "Connection error : " + err
@@ -81,7 +83,7 @@ $(document).on "turbolinks:load", ->
               "Accept": "application/json"
 
           # Delete selection and its datasheets
-          fetch("/datasheet_categories/" + category.id, deleteCategoryOptions)
+          fetch(root + "/datasheet_categories/" + category.id, deleteCategoryOptions)
           .catch((err) ->
             console.log("Connection error : " + err)
             appData.alert = "Connection error : " + err
