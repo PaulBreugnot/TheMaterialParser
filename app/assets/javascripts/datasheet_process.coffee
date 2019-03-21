@@ -92,7 +92,6 @@ $(document).on "turbolinks:load", ->
       fetchDatasheets: () ->
           parsedUrl = new URL(window.location.href)
           this.datasheet_selection_id = parsedUrl.searchParams.get("selection_id")
-          console.log(this.datasheet_selection_id)
 
           # Fetch parameters
           this.datasheetsUrl = root + "/datasheet_selections/" + this.datasheet_selection_id
@@ -125,10 +124,7 @@ $(document).on "turbolinks:load", ->
                   status:'waiting'
                   selected: false
                   ) for datasheet in json
-              console.log(appData.datasheets)
               if Object.keys(appData.datasheets).length > 0
-                console.log(Object.keys(appData.datasheets)[0])
-                console.log(appData.datasheets[Object.keys(appData.datasheets)[0]])
                 vueInstance.selectDatasheet(appData.datasheets[Object.keys(appData.datasheets)[0]])
             )
 
@@ -162,7 +158,6 @@ $(document).on "turbolinks:load", ->
           "mousedown",
           "canvas",
           (e) ->
-            console.log(e.target.id)
             appData.currentSelection.datasheet = appData.selectedDatasheet
             appData.currentSelection.page = parseInt(e.target.id.match(/\d+/)[0])
 
@@ -178,8 +173,6 @@ $(document).on "turbolinks:load", ->
 
             appData.currentSelection.active = true
             pdfViewWidth = parseInt(e.target.style.width.match(/\d+/)[0])
-            console.log(e.target)
-            console.log("Canvas width :" + pdfViewWidth)
             appData.currentSelection.canvasWidth = parseInt(e.target.style.width.match(/\d+/)[0])
 
             appData.currentSelection.x = xPos
@@ -235,9 +228,9 @@ $(document).on "turbolinks:load", ->
           )
 
         setTimeout(
-          () -> (injectSelectionInIframe(selection)
-          console.log(selection.page)) for selection in appData.selections,
-          2000);
+          () ->
+            (injectSelectionInIframe(selection) for selection in appData.selections)
+          , 2000)
 
       updateActiveSelection: (width, height) ->
         this.currentSelection.width = width
@@ -275,7 +268,6 @@ $(document).on "turbolinks:load", ->
         this.notice = ""
         datasheet.status = "waiting" for datasheet, id in appData.datasheets
 
-        console.log(this.datasheets)
         selectionsToSend =
           datasheet_process:
             datasheet_selection_id: this.datasheet_selection_id
@@ -313,7 +305,6 @@ $(document).on "turbolinks:load", ->
             []
           )
         .then((json) ->
-          console.log(json)
           appData.extractedData = json.materials
           # appData.datasheets[datasheetStatus.datasheet_id].status = datasheetStatus.status for datasheetStatus in json.datasheet_status
           )
