@@ -1,3 +1,6 @@
+if @searchResultUuid
+  json.selection_uuid @searchResultUuid
+end
 
 json.materials @materials do |material|
   if material.id

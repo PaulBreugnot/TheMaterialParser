@@ -38,35 +38,41 @@ class Composition < ApplicationRecord
           value = entry[1]
         end
       # if AvailablePeriodicElements.checkElement(component.name)
-        puts "Component OK"
+        puts "Component name OK"
         component.name = AvailablePeriodicElements.getSymbol(component.name)
-        component.balance = Component.isRawValueBalanced?(value)
-        component.residual = Component.isRawValueResidual?(value)
-        values = Component.extractValues(value)
-        if values.size > 0
-          if values.size == 2
-            component.range = true
-            component.minValue = values[0].to_f
-            component.maxValue = values[1].to_f
-            component.value = (values[0].to_f + values[1].to_f) / 2
-          elsif values.size == 1
-            component.range = false
-            component.value = values[0].to_f
+        if value
+          puts "Component value OK"
+          component.balance = Component.isRawValueBalanced?(value)
+          component.residual = Component.isRawValueResidual?(value)
+          values = Component.extractValues(value)
+          if values.size > 0
+            if values.size == 2
+              component.range = true
+              component.minValue = values[0].to_f
+              component.maxValue = values[1].to_f
+              component.value = (values[0].to_f + values[1].to_f) / 2
+            elsif values.size == 1
+              component.range = false
+              component.value = values[0].to_f
+            end
           end
+          component.composition = composition
+          composition.components.push(component)
+
+          puts "Name : #{component.name}"
+          puts "Value : #{component.value}"
+          puts "MinValue : #{component.minValue}"
+          puts "MaxValue : #{component.maxValue}"
+          puts "Balance : #{component.balance}"
+          puts "Residual : #{component.residual}"
+        else
+          # If at least one component was invalid, for now we consider that all the composition is invalid
+          puts "Bad component value detected"
+          return nil
         end
-
-        component.composition = composition
-        composition.components.push(component)
-
-        puts "Name : #{component.name}"
-        puts "Value : #{component.value}"
-        puts "MinValue : #{component.minValue}"
-        puts "MaxValue : #{component.maxValue}"
-        puts "Balance : #{component.balance}"
-        puts "Residual : #{component.residual}"
       else
         # If at least one component was invalid, for now we consider that all the composition is invalid
-        puts "Bad component detected"
+        puts "Bad component name detected"
         return nil
       end
     end

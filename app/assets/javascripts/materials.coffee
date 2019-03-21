@@ -13,8 +13,10 @@ $(document).on "turbolinks:load", ->
     allCategoriesSelected: true
     availableComponents: []
     selectedComponents: []
-    allComponentsSelected: true
+    allComponentsSelected: false
     searchName: ""
+    selectMaterialsWithoutCategory: true
+    searchResultUuid: null
 
   # Instanciating Vue
   materialsApp = new Vue({
@@ -113,9 +115,6 @@ $(document).on "turbolinks:load", ->
             appData.availableComponents.push(
                 component
                 ) for component in json.periodic_elements
-            appData.selectedComponents.push(
-                component.symbol
-                ) for component in json.periodic_elements
           )
 
       searchMaterials: () ->
@@ -130,6 +129,7 @@ $(document).on "turbolinks:load", ->
             name: "%#{this.searchName}%" #SQLite3 REGEXP
             categories: this.selectedCategories
             components: this.selectedComponents
+            no_category: this.selectMaterialsWithoutCategory
           )
 
         fetch(root + "/materials/search", options)
@@ -146,10 +146,12 @@ $(document).on "turbolinks:load", ->
           )
         # Process the JSON response
         .then((json) ->
-            # Add received categories to our appData
-            appData.materials.push(
-                material
-                ) for material in json.materials
+          console.log(json)
+          # Add received categories to our appData
+          appData.searchResultUuid = json.selection_uuid
+          appData.materials.push(
+              material
+              ) for material in json.materials
           )
 
       selectAllMaterials: () ->
@@ -163,8 +165,10 @@ $(document).on "turbolinks:load", ->
         if this.allCategoriesSelected
           this.selectedCategories = []
           this.selectedCategories.push(category.id) for category in this.availableCategories
+          this.selectMaterialsWithoutCategory = true
         else
           this.selectedCategories.splice(0, this.selectedCategories.length)
+          this.selectMaterialsWithoutCategory = false
 
       selectAllComponents: () ->
         if this.allComponentsSelected
@@ -175,7 +179,10 @@ $(document).on "turbolinks:load", ->
 
       downloadCsv: () ->
         link = document.createElement('a');
-        link.href = root + "/materials/download_csv";
+        if this.searchResultUuid
+          link.href = root + "/materials/download_csv?selection_uuid=#{this.searchResultUuid}";
+        else
+          link.href = root + "/materials/download_csv"
         link.click();
 
       deleteSelection: () ->

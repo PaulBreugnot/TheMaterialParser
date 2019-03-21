@@ -18,7 +18,15 @@ class MaterialsController < ApplicationController
   end
 
   def download_csv
-    @materials = Material.all
+    if params[:selection_uuid]
+      @materials = []
+      @@material_selections[params[:selection_uuid]].each do |material_id|
+        @materials.push(Material.find(material_id))
+      end
+    else
+      @materials = Material.all
+    end
+
     csv_materials = CSV.generate do |csv|
       csv << ["material", "component", "value", "minValue", "maxValue", "balance", "residual"]
       @materials.each do |material|
@@ -41,7 +49,28 @@ class MaterialsController < ApplicationController
 
   def search
     puts params
-    @materials = Material.joins(:datasheet).where("materials.name LIKE ? AND datasheets.datasheet_category_id IN (?)", params[:name], params[:categories])
+    if params[:no_category]
+      @materials = Material.left_outer_joins(:datasheet).where("materials.name LIKE ? AND (datasheets.id is null OR datasheets.datasheet_category_id IN (?))", params[:name], params[:categories])
+    else
+      @materials = Material.joins(:datasheet).where("materials.name LIKE ? AND datasheets.datasheet_category_id IN (?)", params[:name], params[:categories])
+    end
+
+    @materials = @materials.collect do |material|
+      if ((material.composition.components.collect {|component| component.name}) & params[:components]).sort == params[:components].sort
+        material
+      else
+        nil
+      end
+    end
+    @materials = @materials.compact
+    @searchResultUuid = SecureRandom.uuid
+    @@material_selections[@searchResultUuid] = []
+
+    puts @materials
+    @materials.each do |search_result|
+      @@material_selections[@searchResultUuid].push(search_result.id)
+    end
+
     respond_to do |format|
       format.json { render :materials }
     end
