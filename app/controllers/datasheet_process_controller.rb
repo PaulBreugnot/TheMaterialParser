@@ -18,7 +18,7 @@ class DatasheetProcessController < ApplicationController
 
     datasheet_selection = DatasheetSelection.find(params[:datasheet_process][:datasheet_selection_id])
     @@waitingResults[params[:datasheet_process][:datasheet_selection_id]] = []
-    # @datasheetStatus = {}
+    @datasheetStatus = {}
 
     datasheet_selection.datasheets.each do |datasheet|
 
@@ -79,7 +79,7 @@ class DatasheetProcessController < ApplicationController
           datasheet_id: datasheet.id,
           status: 'ok',
         )
-        # @datasheetStatus[datasheet.id] = "ok"
+        @datasheetStatus[datasheet.id] = "ok"
         @@waitingResults[params[:datasheet_process][:datasheet_selection_id]].push(material)
       else
         ActionCable.server.broadcast(
@@ -87,7 +87,7 @@ class DatasheetProcessController < ApplicationController
           datasheet_id: datasheet.id,
           status: 'warning',
         )
-        # @datasheetStatus[datasheet.id] = "warning"
+        @datasheetStatus[datasheet.id] = "warning"
       end
     #  end
     end

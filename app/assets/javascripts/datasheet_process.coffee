@@ -306,7 +306,7 @@ $(document).on "turbolinks:load", ->
           )
         .then((json) ->
           appData.extractedData = json.materials
-          # appData.datasheets[datasheetStatus.datasheet_id].status = datasheetStatus.status for datasheetStatus in json.datasheet_status
+          appData.datasheets[datasheetStatus.datasheet_id].status = datasheetStatus.status for datasheetStatus in json.datasheet_status
           )
 
       downloadCsv: () ->
