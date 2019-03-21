@@ -47,13 +47,6 @@
   height: 82%;
 }
 
-.selection_area {
-  position: fixed;
-  background-color: rgba(0, 0, 255, 0.3);
-  outline: 4px dashed blue;
-  outline-offset:0px;
-}
-
 .nav-pills > .active, .nav-pills > .active{
     background-color: #CD853F !important;
 }

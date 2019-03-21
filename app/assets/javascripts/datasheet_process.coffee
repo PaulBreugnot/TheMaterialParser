@@ -2,10 +2,6 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-SelectionArea = Vue.extend({
-  template: '<div class="selection_area"></div>'
-})
-
 selectionDeepCopy = (selection) ->
   selectionCopy =
     active: selection.active
@@ -27,16 +23,24 @@ injectSelectionInIframe = (selection) ->
   $("#pdfIframe").contents().find(canvasWrapperSelector).append(
     # We use the pair x / y to generate a "unique" id
     """
-    <div id="#{Math.floor(selection.x)}_#{Math.floor(selection.y)}" class="selection"
-      style="#{selection.position}position:absolute;background-color:#{selection.backgroundColor};outline: 4px dashed #{selection.borderColor}; outline-offset:0px"
-    ></div>
+    <div id="#{Math.floor(selection.x)}_#{Math.floor(selection.y)}" class="selection_box"></div>
     """
-  )
+    )
+  $("#pdfIframe").contents()
+    .find("##{Math.floor(selection.x)}_#{Math.floor(selection.y)}")
+    .css(
+      "left": selection.x
+      "top": selection.y
+      "height": selection.height
+      "width": selection.width
+      "background-color": selection.backgroundColor
+      "outline": "4px dashed #{selection.borderColor}"
+      "position": "absolute"
+      "outline-offset": "0px"
+      )
 
 removeSelectionFromIframe = (selection) ->
   $("#pdfIframe").contents().find("##{Math.floor(selection.x)}_#{Math.floor(selection.y)}").remove()
-
-Vue.component('selection-area', SelectionArea)
 
 $(document).on "turbolinks:load", ->
   return unless $("#process_view").length > 0
@@ -159,8 +163,18 @@ $(document).on "turbolinks:load", ->
           "canvas",
           (e) ->
             console.log(e.target.id)
-            xPos = leftOffset + e.clientX
-            yPos = topOffset + e.clientY
+            appData.currentSelection.datasheet = appData.selectedDatasheet
+            appData.currentSelection.page = parseInt(e.target.id.match(/\d+/)[0])
+
+            appData.currentSelection.backgroundColor = "rgb(0, 0, 255, 0.3)"
+            appData.currentSelection.borderColor = "blue"
+
+            canvasWrapperSelector = ".page[data-page-number=\"#{appData.currentSelection.page}\"] .canvasWrapper"
+            canvasLeftOffset = $("#pdfIframe").contents().find(canvasWrapperSelector).offset().left
+            canvasTopOffset = $("#pdfIframe").contents().find(canvasWrapperSelector).offset().top
+
+            xPos = e.clientX - canvasLeftOffset
+            yPos = e.clientY - canvasTopOffset
 
             appData.currentSelection.active = true
             pdfViewWidth = parseInt(e.target.style.width.match(/\d+/)[0])
@@ -168,23 +182,28 @@ $(document).on "turbolinks:load", ->
             console.log("Canvas width :" + pdfViewWidth)
             appData.currentSelection.canvasWidth = parseInt(e.target.style.width.match(/\d+/)[0])
 
-            appData.currentSelection.datasheet = appData.selectedDatasheet
-            appData.currentSelection.page = parseInt(e.target.id.match(/\d+/)[0])
-            vueInstance.updateActiveSelection(xPos, yPos, 0, 0)
+            appData.currentSelection.x = xPos
+            appData.currentSelection.y = yPos
+            vueInstance.updateActiveSelection(0, 0)
+
+            injectSelectionInIframe(appData.currentSelection)
 
           )
 
         $("#pdfIframe").contents().on(
           "mousemove",
-          "canvas",
+          ".canvasWrapper",
           (e) ->
             if appData.currentSelection.active
-              xPos = leftOffset + e.clientX
-              yPos = topOffset + e.clientY
+              canvasWrapperSelector = ".page[data-page-number=\"#{appData.currentSelection.page}\"] .canvasWrapper"
+
+              canvasLeftOffset = $("#pdfIframe").contents().find(canvasWrapperSelector).offset().left
+              canvasTopOffset = $("#pdfIframe").contents().find(canvasWrapperSelector).offset().top
+
+              xPos = e.clientX - canvasLeftOffset
+              yPos = e.clientY - canvasTopOffset
 
               vueInstance.updateActiveSelection(
-                appData.currentSelection.x
-                appData.currentSelection.y
                 xPos - appData.currentSelection.x
                 yPos - appData.currentSelection.y
               )
@@ -192,9 +211,10 @@ $(document).on "turbolinks:load", ->
 
         $("#pdfIframe").contents().on(
           "mouseup",
-          "canvas",
+          ".canvasWrapper",
           (e) ->
             if appData.currentSelection.active
+              removeSelectionFromIframe(appData.currentSelection)
               appData.currentSelection.active = false
               appData.currentSelection.backgroundColor = "rgb(255, 0, 0, 0.3)"
               appData.currentSelection.borderColor = "red"
@@ -202,15 +222,6 @@ $(document).on "turbolinks:load", ->
               canvasWrapperSelector = ".page[data-page-number=\"#{appData.currentSelection.page}\"] .canvasWrapper"
               canvasLeftOffset = $("#pdfIframe").contents().find(canvasWrapperSelector).offset().left
               canvasTopOffset = $("#pdfIframe").contents().find(canvasWrapperSelector).offset().top
-
-              xRelativeToCanvas = appData.currentSelection.x - leftOffset - canvasLeftOffset
-              yRelativeToCanvas = appData.currentSelection.y - topOffset - canvasTopOffset
-              vueInstance.updateActiveSelection(
-                xRelativeToCanvas
-                yRelativeToCanvas
-                appData.currentSelection.width
-                appData.currentSelection.height
-              )
 
               appData.selections.push(
                   selectionDeepCopy(appData.currentSelection)
@@ -228,16 +239,15 @@ $(document).on "turbolinks:load", ->
           console.log(selection.page)) for selection in appData.selections,
           2000);
 
-      updateActiveSelection: (x, y, width, height) ->
-        this.currentSelection.x = x
-        this.currentSelection.y = y
+      updateActiveSelection: (width, height) ->
         this.currentSelection.width = width
         this.currentSelection.height = height
-        this.currentSelection.position =
-          "left:" + x + "px;" + \
-          "top:" + y + "px;" + \
-          "width:" + width + "px;" + \
-          "height:" + height + "px;"
+        $("#pdfIframe").contents()
+          .find("##{Math.floor(this.currentSelection.x)}_#{Math.floor(this.currentSelection.y)}")
+          .css(
+              width: "#{width}px"
+              height: "#{height}px"
+            )
 
       viewSelection: (selectionToView) ->
         if this.selectedSelection
