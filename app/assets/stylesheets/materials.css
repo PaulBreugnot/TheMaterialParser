@@ -1,5 +1,9 @@
+#materials_column {
+  height: 100%;
+}
+
 #materials_table {
-  height: 90%;
+  height: 85%;
 }
 
 #search_form {
@@ -13,6 +17,7 @@
 
 #search_sidebar {
   padding: 10px;
+  height: 100%;
 }
 
 #search_options_container {
