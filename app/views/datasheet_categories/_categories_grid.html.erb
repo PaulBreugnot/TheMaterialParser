@@ -6,7 +6,6 @@
             <img v-if="category.logo.url" class="card-img-top" v-bind:src="category.logo.url" alt="Category Logo">
               <div class="card-body">
                 <h5 class="card-title"> {{category.name}} </h5>
-                <button type="button" class="btn btn-success">Process</button>
                 <button type="button" class="btn btn-info" v-on:click="selectCategory(category)">Edit</button>
                 <button type="button" class="btn btn-danger" v-on:click="deleteCategory(category)">Delete</button>
               </div>
