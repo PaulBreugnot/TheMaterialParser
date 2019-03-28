@@ -45,7 +45,7 @@ removeSelectionFromIframe = (selection) ->
 $(document).on "turbolinks:load", ->
   return unless $("#process_view").length > 0
 
-  root = window.location.href.replace(/\/datasheet_process\/\?selection_id=\d/gi, "")
+  root = window.location.href.replace(/\/datasheet_process\/\?selection_id=\d+/gi, "")
 
   # Vue data definition
   appData =

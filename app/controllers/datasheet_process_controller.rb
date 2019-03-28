@@ -49,8 +49,6 @@ class DatasheetProcessController < ApplicationController
         scaledHeight = selection[:height] * ratio
 
         area = page.getArea(scaledY, scaledX, scaledY + scaledHeight, scaledX + scaledWidth) #top, left, bottom, right
-        puts area
-
         oe.close()
 
         ## Extract table

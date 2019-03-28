@@ -17,10 +17,10 @@ class Component < ApplicationRecord
   end
 
   def self.isRawValueResidual?(rawValue)
-    return rawValue[/≤|</] != nil
+    return rawValue[/≤|<|-/] != nil
   end
 
   def self.extractValues(rawValue)
-    return rawValue.scan(/\d+.\d+/)
+    return rawValue.scan(/\d+(?:\.\d+)*/)
   end
 end

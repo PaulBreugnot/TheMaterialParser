@@ -26,7 +26,7 @@
               </div>
             </td>
 
-            <td><input type="checkbox" v-model="selection.headers"></td>
+            <td><input type="checkbox" v-model="selection.headers" v-bind:disabled="selection.orientation=='vertical'"></td>
             <td><button class="btn btn-danger" v-on:click="deleteSelection(selection)">Remove</button></td>
          </tr>
        </tbody>

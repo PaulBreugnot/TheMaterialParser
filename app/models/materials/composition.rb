@@ -12,8 +12,8 @@ class Composition < ApplicationRecord
     puts "Parsing composition from csv..."
     puts csv
 
-    table = CSV.parse(csv, headers: headers)
-    table = CSV.parse(csv, headers: headers)
+    # If orientation is vertical, we always use headers (they are component names)
+    table = CSV.parse(csv, headers: orientation==:vertical || headers)
 
     if orientation==:vertical
       puts "Processing by column."
@@ -61,6 +61,7 @@ class Composition < ApplicationRecord
 
           puts "Name : #{component.name}"
           puts "Value : #{component.value}"
+          puts "Range : #{component.range}"
           puts "MinValue : #{component.minValue}"
           puts "MaxValue : #{component.maxValue}"
           puts "Balance : #{component.balance}"
