@@ -1,6 +1,8 @@
 # TheMaterialParser
 *TheMaterialParser* is Rail based web application that allows you to *semi-automatically* extract material compositions from PDF documents.
 
+![](https://github.com/PaulBreugnot/TheMaterialParser/blob/master/docs/first_process_iteration_example.png)
+
 # About
 This project that has been led in the context of a research project at the [Ecole Des Mines de Saint-Etienne](https://www.mines-stetienne.fr/en/), among the SMS research group.
 
